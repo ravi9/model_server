@@ -81,14 +81,14 @@ ifeq ($(BASE_OS),ubuntu)
   else
 	BASE_IMAGE ?= ubuntu:$(BASE_OS_TAG_UBUNTU)
   endif
-  INSTALL_DRIVER_VERSION ?= "22.35.24055"
+  INSTALL_DRIVER_VERSION ?= "22.43.24595"
   DLDT_PACKAGE_URL ?= http://s3.toolbox.iotg.sclab.intel.com/ov-packages/l_openvino_toolkit_ubuntu20_2022.3.0.9121.567eac4d8fb_x86_64.tgz
 endif
 ifeq ($(BASE_OS),redhat)
   BASE_OS_TAG=$(BASE_OS_TAG_REDHAT)
   BASE_IMAGE ?= registry.access.redhat.com/ubi8/ubi:$(BASE_OS_TAG_REDHAT)
   DIST_OS=redhat
-  INSTALL_DRIVER_VERSION ?= "22.28.23726"
+  INSTALL_DRIVER_VERSION ?= "22.43.24595"
   DLDT_PACKAGE_URL ?= http://s3.toolbox.iotg.sclab.intel.com/ov-packages/l_openvino_toolkit_rhel8_2022.3.0.9121.567eac4d8fb_x86_64.tgz
 endif
 
