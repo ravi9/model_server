@@ -43,6 +43,7 @@ cc_library(
 )
 
 load("@com_google_protobuf//:protobuf.bzl", "cc_proto_library")
+load("@tensorflow_serving//tensorflow_serving:serving.bzl", "serving_tensorflow_proto_dep")
 
 cc_shared_library(
     name = "ovms_shared",
@@ -240,6 +241,8 @@ cc_library(
         "dags/pipeline_factory.hpp",
         "precision.cpp",
         "precision.hpp",
+        "stream_prediction_service.cpp",
+        "stream_prediction_service.hpp",
         "prediction_service.cpp",
         "prediction_service.hpp",
         "prediction_service_utils.hpp",
@@ -322,6 +325,7 @@ cc_library(
         "@opencv//:opencv",
         "@com_github_jupp0r_prometheus_cpp//core",
         "//src/kfserving_api:kfserving_api_cpp",
+        "//src/tfservingstream_api:stream_prediction_service_cpp",
     ],
     local_defines = [
         "SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE",
@@ -341,6 +345,25 @@ cc_library(
         "-lcrypto",
     ]
 )
+
+#cc_proto_library(
+#    name = "stream_prediction_service_cpp",
+#    srcs = ["stream_prediction_service.proto",],
+#    deps = [
+#        "@tensorflow_serving//tensorflow_serving/apis:predict_proto",
+#        serving_tensorflow_proto_dep(
+#            "@org_tensorflow//tensorflow/core:protos_all",
+#        ),
+#                    ],
+#    cc_libs = ["@com_google_protobuf//:protobuf"],
+#    protoc = "@com_google_protobuf//:protoc",
+#    default_runtime = "@com_google_protobuf//:protobuf",
+#    use_grpc_plugin = True, # ??
+#    testonly = False, # ??
+#    visibility = [
+#        "//visibility:public",
+#    ],
+#)
 
 cc_binary(
     name = "libsampleloader.so",
