@@ -286,26 +286,17 @@ void prepareInferStringRequest(::KFSRequest& request, const std::string& name, c
         ++bufferId;
     }
     KFSTensorInputProto* tensor;
-    std::string* content = nullptr;
     if (it != request.mutable_inputs()->end()) {
         tensor = &*it;
-        if (!putBufferInInputTensorContent) {
-            content = request.mutable_raw_input_contents()->Mutable(bufferId);
-        }
     } else {
         tensor = request.add_inputs();
-        if (!putBufferInInputTensorContent) {
-            content = request.add_raw_input_contents();
-        }
     }
     tensor->set_name(name);
     tensor->set_datatype("BYTES");
     tensor->mutable_shape()->Clear();
     tensor->add_shape(data.size());
-    size_t dataSize = 1;
     if (!putBufferInInputTensorContent) {
-        content->resize(dataSize);
-        std::memcpy(content->data(), data.data(), content->size());
+        FAIL() << "not supported";
     } else {
         for (auto inputData : data) {
             auto bytes_val = tensor->mutable_contents()->mutable_bytes_contents()->Add();

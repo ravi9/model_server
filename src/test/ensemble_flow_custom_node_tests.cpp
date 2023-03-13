@@ -5420,7 +5420,8 @@ TYPED_TEST(EnsembleFlowStringInput, positive_2d) {
         'z', 'e', 'b', 'r', 'a', 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::vector<size_t> expectedShape = {3, 11};
-    checkIncrement4DimResponse<uint8_t>(this->pipelineOutputName, expectedData, this->request, this->response, expectedShape);
+    bool checkInTensorProto = true;
+    checkIncrement4DimResponse<uint8_t>(this->pipelineOutputName, expectedData, this->request, this->response, expectedShape, checkInTensorProto);
 }
 
 TYPED_TEST(EnsembleFlowStringInput, positive_1d) {
@@ -5465,5 +5466,6 @@ TYPED_TEST(EnsembleFlowStringInput, positive_1d) {
         'm', 'a',
         'k', 'o', 't', 'a'};
     std::vector<size_t> expectedShape = {33};
-    checkIncrement4DimResponse<uint8_t>(this->pipelineOutputName, expectedData, this->request, this->response, expectedShape);
+    bool checkInTensorProto = true;
+    checkIncrement4DimResponse<uint8_t>(this->pipelineOutputName, expectedData, this->request, this->response, expectedShape, checkInTensorProto);
 }
