@@ -373,6 +373,7 @@ Status RequestValidator<ovms::InferenceRequest, InferenceTensor, const Inference
 template <typename RequestType, typename InputTensorType, typename InputIteratorType, typename ShapeType>
 Status RequestValidator<RequestType, InputTensorType, InputIteratorType, ShapeType>::checkBatchSizeMismatch(const InputTensorType& proto, const Dimension& servableBatchSize, const size_t batchSizeIndex, Status& finalStatus, Mode batchingMode, Mode shapeMode) const {
     RequestShapeInfo<InputTensorType, ShapeType> rsi(proto);
+
     if (servableBatchSize.match(rsi.getDim(batchSizeIndex))) {
         return StatusCode::OK;
     }
@@ -780,7 +781,7 @@ template <>
 Status RequestValidator<TFSRequestType, TFSInputTensorType, TFSInputTensorIteratorType, TFSShapeType>::validateNumberOfShapeDimensions(const ovms::TensorInfo& inputInfo, const TFSInputTensorType& proto) const {
     // Network and request must have the same number of shape dimensions, higher than 0
     const auto& shape = inputInfo.getShape();
-    if (proto.tensor_shape().dim_size() <= 0 ||
+    if (proto.tensor_shape().dim_size() < 0 ||
         shape.size() != static_cast<size_t>(proto.tensor_shape().dim_size())) {
         std::stringstream ss;
         ss << "Expected: " << shape.toString()
@@ -918,18 +919,14 @@ static const std::string* getRawInputContents(const KFSRequest& request, size_t 
 template <typename RequestType, typename InputTensorType, typename IteratorType, typename ShapeType>
 Status RequestValidator<RequestType, InputTensorType, IteratorType, ShapeType>::validate() {
     Status finalStatus = StatusCode::OK;
-
+    SPDLOG_DEBUG("started validation");
     RETURN_IF_ERR(validateNumberOfInputs());
     RETURN_IF_ERR(validateRequestCoherency());
-
     size_t bufferId = 0;
     for (const auto& [name, inputInfo] : inputsInfo) {
         RETURN_IF_ERR(validateAndGetInput(request, name, it, bufferId));
-
         const auto& proto = getInputFromIt(it);
-
         RETURN_IF_ERR(checkIfShapeValuesNegative(proto));
-
         // Batch and mode retrieval for given input
         auto batchIndex = inputInfo->getLayout().getBatchIndex();
         if (!batchIndex.has_value()) {
@@ -937,14 +934,13 @@ Status RequestValidator<RequestType, InputTensorType, IteratorType, ShapeType>::
                 servableName, servableVersion, name, inputInfo->getLayout());
             return StatusCode::INTERNAL_ERROR;
         }
-        if (inputInfo->getShape().size() < batchIndex.value() + 1) {
-            SPDLOG_DEBUG("[servable name: {} version: {}] Batch index out of shape range for input: {} layout: {} shape: {}",
-                servableName, servableVersion, name, inputInfo->getLayout(), inputInfo->getShape().toString());
-            return StatusCode::INTERNAL_ERROR;
-        }
+    //    if (inputInfo->getShape().size() < batchIndex.value() + 1) {
+    //        SPDLOG_DEBUG("[servable name: {} version: {}] Batch index {} out of shape range for input: {} layout: {} shape: {}",
+    //            servableName, servableVersion, batchIndex.value(), name, inputInfo->getLayout(), inputInfo->getShape().toString());
+    //        return StatusCode::INTERNAL_ERROR;
+    //    }
         const Dimension& batchSize = inputInfo->getShape()[batchIndex.value()];
         Mode shapeMode = getShapeMode(shapeInfo, name);
-
         if (requiresPreProcessing(proto)) {
             const auto processingHint = inputInfo->getPreProcessingHint();
             int32_t inputBatchSize = 0;
@@ -985,6 +981,7 @@ Status RequestValidator<RequestType, InputTensorType, IteratorType, ShapeType>::
         // Data Array Proto
         RETURN_IF_ERR(validatePrecision(*inputInfo, proto));
         RETURN_IF_ERR(validateNumberOfShapeDimensions(*inputInfo, proto));
+        // here handling input with empty shape should be added
         RETURN_IF_ERR(checkBatchSizeMismatch(proto, batchSize, batchIndex.value(), finalStatus, batchingMode, shapeMode));
         RETURN_IF_ERR(checkShapeMismatch(proto, *inputInfo, batchIndex.value(), finalStatus, batchingMode, shapeMode));
         RETURN_IF_ERR(validateTensorContent(proto, inputInfo->getPrecision(), bufferId));

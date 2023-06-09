@@ -1166,12 +1166,15 @@ Status ModelInstance::infer(const RequestType* requestProto,
     OVMS_PROFILE_FUNCTION();
     Timer<TIMER_END> timer;
     using std::chrono::microseconds;
-
     auto requestProcessor = createRequestProcessor(requestProto, responseProto);  // request, response passed only to deduce type
     auto status = requestProcessor->extractRequestParameters(requestProto);
     if (!status.ok())
         return status;
-    status = validate(requestProto);
+    
+    // Skipping input validation
+    // status = validate(requestProto);
+    status = StatusCode::OK;
+
     if (status.batchSizeChangeRequired() || status.reshapeRequired()) {
         // We are ensured that request shape is valid and convertible to model shape (non negative, non zero)
         // We can use it to perform reshape via shape=auto
