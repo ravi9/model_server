@@ -801,11 +801,22 @@ Status MediapipeGraphExecutor::infer(const KFSRequest* request, KFSResponse* res
             this->name);
         return Status(StatusCode::INTERNAL_ERROR, "Not all input packets created");
     }
+    auto start = std::chrono::high_resolution_clock::now();
+    auto stop = std::chrono::high_resolution_clock::now();
     // receive outputs
     for (auto& [outputStreamName, poller] : outputPollers) {
         size_t receivedOutputs = 0;
         SPDLOG_DEBUG("Will wait for output stream: {} packet", outputStreamName);
-        while (poller.Next(&packet)) {
+        while ((std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() < 1700)) {
+            if (poller.QueueSize() == 0) {
+                stop = std::chrono::high_resolution_clock::now();
+                continue;
+            }
+            bool gotPacket = poller.Next(&packet);
+            if (!gotPacket) {
+                break;
+            }
+            stop = std::chrono::high_resolution_clock::now();
             SPDLOG_DEBUG("Received packet from output stream: {}", outputStreamName);
             if (this->outputTypes.at(outputStreamName) == mediapipe_packet_type_enum::KFS_RESPONSE) {
                 SPDLOG_DEBUG("Response processing packet type KFSPass name: {}", outputStreamName);
