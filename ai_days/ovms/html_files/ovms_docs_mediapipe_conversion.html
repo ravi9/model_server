@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to update existing graphs from MediaPipe framework to use OpenVINO for inference &#8212; OpenVINO™  documentation</title>
+
+    
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/blank.css" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <link href="_static/css/media/favicon.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="_static/css/openvino_sphinx_theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/button.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/input.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/textfield.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/tabs.css" type="text/css" />
+    <script src="_static/js/openvino_sphinx_theme.js"></script>
+    <script src="_static/js/sortable_tables.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+<script type="module" src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"></script> 
+<link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css">
+
+<link rel="stylesheet" href="_static/css/viewer.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/banner.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/coveo_custom.css" type="text/css" />
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-barchart-background@1.3.0/build/Plugin.Barchart.Background.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-deferred@1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+<script src="_static/js/viewer.min.js"></script>
+<script src="/assets/versions_raw.js"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/tabs.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/js/custom.js"></script>
+    <script src="_static/js/graphs.js"></script>
+    <script src="_static/js/newsletter.js"></script>
+    <script src="_static/js/open_sidebar.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+      <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="index.html">
+  <img src="_static/logo.svg" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="home.html">
+  OpenVINO 2024.1
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.openvino.ai/install">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://blog.openvino.ai/">
+  Blog
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://community.intel.com/t5/Intel-Distribution-of-OpenVINO/bd-p/distribution-openvino-toolkit">
+  Forum
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://www.intel.com/content/www/us/en/support/products/96066/software/development-software/openvino-toolkit.html">
+  Support
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/openvinotoolkit">
+  GitHub
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/openvinotoolkit/openvino" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="sst-github"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+</ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        
+<div class="dropdown sst-dropdown sst-dropdown-navbar">
+  <button class="btn sst-btn dropdown-toggle" type="button" id="version-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+  <div class="dropdown-menu" aria-labelledby="version-selector">
+  </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        
+
+<div class="dropdown sst-dropdown sst-dropdown-navbar">
+  <button class="btn sst-btn dropdown-toggle" type="button" id="language-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">English</button>
+  <div class="dropdown-menu" aria-labelledby="language-selector">
+    
+      
+        <a class="dropdown-item font-weight-bold" href="/latest/index.html">English</a>
+      
+    
+      
+        <a  class="dropdown-item" href="/cn/latest/index.html">Chinese</a>
+      
+    
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+        <div id="collapse-nav-wrapper" class="container-xl">
+          <button id="collapse-nav" class="button bttn-prm button-size-m" type="button" data-toggle="collapse" data-target="#nav-tree" aria-expanded="false" aria-controls="nav-tree">
+            Documentation navigation <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </nav>
+    
+<div id="info-banner" class="transition-banner"></div>
+<script src="_static/js/hide_banner.js"></script>
+
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar" id="nav-tree"><div>
+<atomic-search-interface id="sa-search">
+  <atomic-search-box redirection-url="search.html">
+  </atomic-search-box>
+</atomic-search-interface>
+</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+      
+      
+      
+    </div>
+  </nav>
+  
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection onthispage pt-5 pb-3">
+    On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-get-models-used-in-mediapipe-solutions">
+   How to get models used in MediaPipe solutions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-prepare-the-configuration-for-the-openvino-model-server">
+   How to prepare the configuration for the OpenVINO Model Server
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-adjust-existing-graphs-to-perform-inference-with-openvino-model-server">
+   How to adjust existing graphs to perform inference with OpenVINO Model Server
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#identify-all-inference-calculators-used-in-nested-subgraphs">
+     1. Identify all inference calculators used in nested subgraphs.
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#replacement-of-inference-calculators-in-graph-and-subgraphs">
+     2. Replacement of inference calculators in graph and subgraphs
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#add-information-about-input-output-tensors-ordering">
+       2.1. Add information about input/output tensors ordering.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adjust-graph-input-output-streams">
+     3. Adjust graph input/output streams
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-the-config-json-file-path-in-the-session-calculator">
+     4. Set the config.json file path in the session calculator
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                <div class="tocsection download-docs">
+  <div class="dropdown sst-dropdown">
+    <button class="button bttn-prm button-size-m" data-display="static" type="button" id="download-options"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Download Docs
+    </button>
+    <div class="dropdown-menu" aria-labelledby="download-options">
+      <a class="dropdown-item" href="#" onclick="window.print()">.pdf</a>
+      <a id="download-zip-btn" class="dropdown-item" href="#">.zip</a>
+    </div>
+  </div>
+</div>
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+              
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+            
+                <div>
+                  
+  <div class="section" id="how-to-update-existing-graphs-from-mediapipe-framework-to-use-openvino-for-inference">
+<h1>How to update existing graphs from MediaPipe framework to use OpenVINO for inference<a class="headerlink" href="#how-to-update-existing-graphs-from-mediapipe-framework-to-use-openvino-for-inference" title="Permalink to this headline">¶</a></h1>
+<p>In this document we will walkthrough steps required to update existing Mediapipe graphs using Tensorflow/TfLite to make them use OpenVINO Runtime for the inference. The step will include:</p>
+<ul class="simple">
+<li><p>retrieving models from existing solutions</p></li>
+<li><p>prepare configuration of OpenVINOInferenceSession calculator</p></li>
+<li><p>make changes to existing pbtxt graphs to replace TensorFlow calculators with OpenVINO calculators</p></li>
+</ul>
+<div class="section" id="how-to-get-models-used-in-mediapipe-solutions">
+<h2>How to get models used in MediaPipe solutions<a class="headerlink" href="#how-to-get-models-used-in-mediapipe-solutions" title="Permalink to this headline">¶</a></h2>
+<p>When you build MediaPipe applications or solutions from the <a class="reference external" href="https://github.com/google/mediapipe">https://github.com/google/mediapipe</a> repo, typically the bazel build would download the needed models as a data dependency. When the graph is to be deployed with OpenVINO Inference calculators, the models needs to be stored in the <a class="reference external" href="https://docs.openvino.ai/2024/ovms_docs_models_repository.html">models repository</a>.
+That way you can take advantage of the <a class="reference internal" href="ovms_docs_model_version_policy.html"><span class="doc std std-doc">models versioning feature</span></a> and store the models on the local or the <a class="reference internal" href="ovms_docs_cloud_storage.html"><span class="doc std std-doc">cloud storage</span></a>. The OpenVINO calculator is using as a parameter the path to the <a class="reference external" href="https://docs.openvino.ai/2024/ovms_docs_serving_model.html#serving-multiple-models">config.json</a> file with models configuration with the specific model name.
+To get the model used in MediaPipe demo you can either trigger the original build target that depends upon that model and then search in bazel cache or download directly from locations below.</p>
+<ul class="simple">
+<li><p>https://storage.googleapis.com/mediapipe-models/</p></li>
+<li><p>https://storage.googleapis.com/mediapipe-assets/</p></li>
+</ul>
+</div>
+<div class="section" id="how-to-prepare-the-configuration-for-the-openvino-model-server">
+<h2>How to prepare the configuration for the OpenVINO Model Server<a class="headerlink" href="#how-to-prepare-the-configuration-for-the-openvino-model-server" title="Permalink to this headline">¶</a></h2>
+<p>We must prepare OVMS <a class="reference internal" href="ovms_docs_serving_model.html"><span class="doc std std-doc">configuration files</span></a> and <a class="reference internal" href="ovms_docs_models_repository.html"><span class="doc std std-doc">models repository</span></a>. There are two ways that would have different benefits:</p>
+<ol class="arabic simple">
+<li><p>First one is recommended if you reuse models between several pipelines in the same deployment. In this case servables directory structure would look like:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>servables/
+├── config.json
+├── add_two_inputs_model
+│   └── 1
+│       ├── add.bin
+│       └── add.xml
+├── dummy
+│   └── 1
+│       ├── dummy.bin
+│       └── dummy.xml
+└── dummyAdd
+    └── graph.pbtxt
+</pre></div>
+</div>
+<p>And the config.json:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;model_config_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dummy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_path&quot;</span><span class="p">:</span> <span class="s2">&quot;dummy&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_path&quot;</span><span class="p">:</span> <span class="s2">&quot;add_two_inputs_model&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+  <span class="s2">&quot;mediapipe_config_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;dummyAdd&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Second would be better if you would have several services each containing separate mediapipe. This way can make for easier updates to the deployments and keep mediapipes configurations self-contained. In this case you would prepare directories as shown below</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>servables/
+├── config.json
+└── dummyAddGraph
+    ├── add_two_inputs_model
+    │   └── 1
+    │       ├── add.bin
+    │       └── add.xml
+    ├── dummy
+    │   └── 1
+    │       ├── dummy.bin
+    │       └── dummy.xml
+    ├── graph.pbtxt
+    └── subconfig.json
+</pre></div>
+</div>
+<p>and config.json:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;model_config_list&quot;</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">&quot;mediapipe_config_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;dummyAddGraph&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>and the subconfig.json:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;model_config_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;dummy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_path&quot;</span><span class="p">:</span> <span class="s2">&quot;dummy&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_path&quot;</span><span class="p">:</span> <span class="s2">&quot;add_two_inputs_model&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can find more details about OpenVINO Model Server configuration in <a class="reference external" href="https://docs.openvino.ai/2024/ovms_docs_serving_model.html#serving-multiple-models">documentation</a>.</p>
+<p><em>Note</em>: base paths in config.json are relative to the file path of config.json.</p>
+<p>Now we have configuration for OpenVINO Model Server.</p>
+</div>
+<div class="section" id="how-to-adjust-existing-graphs-to-perform-inference-with-openvino-model-server">
+<h2>How to adjust existing graphs to perform inference with OpenVINO Model Server<a class="headerlink" href="#how-to-adjust-existing-graphs-to-perform-inference-with-openvino-model-server" title="Permalink to this headline">¶</a></h2>
+<p>Below are presented steps to adjust existing graph using TensorFlow or TensorFlowLite calculators to use OpenVINO as the inference engine. That way the inference execution can be optimized while preserving the overall graph structure.</p>
+<div class="section" id="identify-all-inference-calculators-used-in-nested-subgraphs">
+<h3>1. Identify all inference calculators used in nested subgraphs.<a class="headerlink" href="#identify-all-inference-calculators-used-in-nested-subgraphs" title="Permalink to this headline">¶</a></h3>
+<p>This steps is not needed if there are no subgraphs. Let’s assume we start with graph like <a class="reference external" href="https://github.com/google/mediapipe/blob/v0.10.3/mediapipe/graphs/holistic_tracking/holistic_tracking_cpu.pbtxt">this</a>.
+We cannot find direct usage of inference calculators in this graph and that is because it is using <code class="docutils literal notranslate"><span class="pre">subgraph</span></code> concept from MediaPipe framework. It allows you to register existing graph as a single calculator. We must search for such nodes in graph and find out each subgraph that is directly using inference calculators. We can grep the MediaPipe code for:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grep</span> <span class="o">-</span><span class="n">R</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;register_as = </span><span class="se">\&quot;</span><span class="s2">HolisticLandmarkCpu&quot;</span>
+</pre></div>
+</div>
+<p>We will find that in using bazel <code class="docutils literal notranslate"><span class="pre">mediapipe_simple_subgraph</span></code> function another <code class="docutils literal notranslate"><span class="pre">pbtxt</span></code> file was registered as a graph. Since in that file there is no inference calculator we need to repeat the procedure until we find all inference calculators used directly or indirectly using subgraphs.</p>
+<p>After performing those steps we have a list of pbtxt files with inference nodes that need adjustments.</p>
+</div>
+<div class="section" id="replacement-of-inference-calculators-in-graph-and-subgraphs">
+<h3>2. Replacement of inference calculators in graph and subgraphs<a class="headerlink" href="#replacement-of-inference-calculators-in-graph-and-subgraphs" title="Permalink to this headline">¶</a></h3>
+<p>We start with basic replacement of inference calculator in graph and subgraphs if needed. Existing configuration could look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="p">{</span>
+  <span class="n">calculator</span><span class="p">:</span> <span class="s2">&quot;HandLandmarkModelLoader&quot;</span>
+  <span class="n">input_side_packet</span><span class="p">:</span> <span class="s2">&quot;MODEL_COMPLEXITY:model_complexity&quot;</span>
+  <span class="n">output_side_packet</span><span class="p">:</span> <span class="s2">&quot;MODEL:model&quot;</span>
+<span class="p">}</span>
+<span class="n">node</span> <span class="p">{</span>
+  <span class="n">calculator</span><span class="p">:</span> <span class="s2">&quot;InferenceCalculator&quot;</span>
+  <span class="n">input_side_packet</span><span class="p">:</span> <span class="s2">&quot;MODEL:model&quot;</span>
+  <span class="n">input_stream</span><span class="p">:</span> <span class="s2">&quot;TENSORS:input_tensor&quot;</span>
+  <span class="n">output_stream</span><span class="p">:</span> <span class="s2">&quot;TENSORS:output_tensors&quot;</span>
+  <span class="n">options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">mediapipe</span><span class="o">.</span><span class="n">InferenceCalculatorOptions</span><span class="o">.</span><span class="n">ext</span><span class="p">]</span> <span class="p">{</span>
+      <span class="n">model_path</span><span class="p">:</span> <span class="s2">&quot;mediapipe/modules/holistic_landmark/hand_recrop.tflite&quot;</span>
+      <span class="n">delegate</span> <span class="p">{</span>
+        <span class="n">xnnpack</span> <span class="p">{}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This tells us which model is used (<code class="docutils literal notranslate"><span class="pre">hand_recrop</span></code>) and what type of packets are send to inference calculator (<code class="docutils literal notranslate"><span class="pre">vector\&lt;mediapipe::Tensor\&gt;</span></code>). We also need information what are model names inputs. This could be checked f.e. using OVMS logs from model loading or metadata request calls. With that information we would replace that part of a graph with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="p">{</span>
+  <span class="n">calculator</span><span class="p">:</span> <span class="s2">&quot;OpenVINOModelServerSessionCalculator&quot;</span>
+  <span class="n">output_side_packet</span><span class="p">:</span> <span class="s2">&quot;SESSION:session&quot;</span>
+  <span class="n">node_options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nb">type</span><span class="o">.</span><span class="n">googleapis</span><span class="o">.</span><span class="n">com</span> <span class="o">/</span> <span class="n">mediapipe</span><span class="o">.</span><span class="n">OpenVINOModelServerSessionCalculatorOptions</span><span class="p">]:</span> <span class="p">{</span>
+      <span class="n">servable_name</span><span class="p">:</span> <span class="s2">&quot;hand_recrop&quot;</span>
+      <span class="n">servable_version</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">node</span> <span class="p">{</span>
+  <span class="n">calculator</span><span class="p">:</span> <span class="s2">&quot;OpenVINOInferenceCalculator&quot;</span>
+  <span class="n">input_side_packet</span><span class="p">:</span> <span class="s2">&quot;SESSION:session&quot;</span>
+  <span class="n">input_stream</span><span class="p">:</span> <span class="s2">&quot;TENSORS:initial_crop_tensor&quot;</span>
+  <span class="n">output_stream</span><span class="p">:</span> <span class="s2">&quot;TENSORS:landmark_tensors&quot;</span>
+  <span class="n">node_options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nb">type</span><span class="o">.</span><span class="n">googleapis</span><span class="o">.</span><span class="n">com</span> <span class="o">/</span> <span class="n">mediapipe</span><span class="o">.</span><span class="n">OpenVINOInferenceCalculatorOptions</span><span class="p">]:</span> <span class="p">{</span>
+          <span class="n">tag_to_input_tensor_names</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="s2">&quot;TENSORS&quot;</span>
+            <span class="n">value</span><span class="p">:</span> <span class="s2">&quot;input_1&quot;</span>
+          <span class="p">}</span>
+          <span class="n">tag_to_output_tensor_names</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="s2">&quot;TENSORS&quot;</span>
+            <span class="n">value</span><span class="p">:</span> <span class="s2">&quot;output_crop&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">OpenVINOModelServerSessionCalculator</span></code> we set <code class="docutils literal notranslate"><span class="pre">servable_name</span></code> with the model’s name we found earlier. In <code class="docutils literal notranslate"><span class="pre">OpenVINOInferenceCalculator</span></code> we set input &amp; output tags names to start with <code class="docutils literal notranslate"><span class="pre">TENSORS</span></code>. We then need to map out those tags to actual model names in <code class="docutils literal notranslate"><span class="pre">mediapipe.OpenVINOInferenceCalculatorOptions</span></code> <code class="docutils literal notranslate"><span class="pre">tag_to_input_tensor_names</span></code> and <code class="docutils literal notranslate"><span class="pre">tag_to_output_tensor_names</span></code> fields.</p>
+<div class="section" id="add-information-about-input-output-tensors-ordering">
+<h4>2.1. Add information about input/output tensors ordering.<a class="headerlink" href="#add-information-about-input-output-tensors-ordering" title="Permalink to this headline">¶</a></h4>
+<p>This step may be required if model has multiple inputs or outputs. If input/output packet types are vector of some type - we must figure out the correct ordering of tensors - expected by the graph. Assuming that model produces several outputs we may need to add following section to <code class="docutils literal notranslate"><span class="pre">OpenVINOInferenceCalculatorOptions</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output_order_list</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_1&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_2&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_3&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In case of multiple inputs, we must do similar steps, and add:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_order_list</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_1&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_2&quot;</span><span class="p">,</span><span class="s2">&quot;Identity_3&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="adjust-graph-input-output-streams">
+<h3>3. Adjust graph input/output streams<a class="headerlink" href="#adjust-graph-input-output-streams" title="Permalink to this headline">¶</a></h3>
+<p>This step is required if you plan to deploy the graph in OpenVINO Model Server and existing graph does not have supported input/output packet types. Check for supported input and output packet types <a class="reference internal" href="ovms_docs_mediapipe.html"><span class="doc std std-doc">here</span></a>.
+In that cases you may need to add converter calculators as it was done <a class="reference external" href="https://github.com/openvinotoolkit/model_server/blob/main/demos/mediapipe/object_detection/graph.pbtxt#L31">here</a>.</p>
+</div>
+<div class="section" id="set-the-config-json-file-path-in-the-session-calculator">
+<h3>4. Set the config.json file path in the session calculator<a class="headerlink" href="#set-the-config-json-file-path-in-the-session-calculator" title="Permalink to this headline">¶</a></h3>
+<p>This step is required if you plan to use graph within existing application. You need to fill <code class="docutils literal notranslate"><span class="pre">server_config</span></code> field in <code class="docutils literal notranslate"><span class="pre">OpenVINOModelServerSessionCalculatorOptions</span></code> to pass full file path to configuration file like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span> <span class="p">{</span>
+  <span class="n">calculator</span><span class="p">:</span> <span class="s2">&quot;OpenVINOModelServerSessionCalculator&quot;</span>
+  <span class="n">output_side_packet</span><span class="p">:</span> <span class="s2">&quot;SESSION:session&quot;</span>
+  <span class="n">node_options</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nb">type</span><span class="o">.</span><span class="n">googleapis</span><span class="o">.</span><span class="n">com</span> <span class="o">/</span> <span class="n">mediapipe</span><span class="o">.</span><span class="n">OpenVINOModelServerSessionCalculatorOptions</span><span class="p">]:</span> <span class="p">{</span>
+      <span class="n">servable_name</span><span class="p">:</span> <span class="s2">&quot;hand_recrop&quot;</span>
+      <span class="n">servable_version</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span>
+      <span class="n">server_config</span><span class="p">:</span> <span class="s2">&quot;/servables/config.json&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+                </div>
+            
+            
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+<footer class="footer mt-5 mt-md-0">
+</footer>
+  </body>
+</html>

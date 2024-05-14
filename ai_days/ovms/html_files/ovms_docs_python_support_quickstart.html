@@ -1,0 +1,521 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python support in OpenVINO Model Server - quickstart &#8212; OpenVINO™  documentation</title>
+
+    
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/blank.css" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <link href="_static/css/media/favicon.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="_static/css/openvino_sphinx_theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/button.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/input.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/textfield.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/tabs.css" type="text/css" />
+    <script src="_static/js/openvino_sphinx_theme.js"></script>
+    <script src="_static/js/sortable_tables.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+<script type="module" src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"></script> 
+<link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css">
+
+<link rel="stylesheet" href="_static/css/viewer.min.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/banner.css" type="text/css" />
+<link rel="stylesheet" href="_static/css/coveo_custom.css" type="text/css" />
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-barchart-background@1.3.0/build/Plugin.Barchart.Background.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-deferred@1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+<script src="_static/js/viewer.min.js"></script>
+<script src="/assets/versions_raw.js"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/tabs.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/js/custom.js"></script>
+    <script src="_static/js/graphs.js"></script>
+    <script src="_static/js/newsletter.js"></script>
+    <script src="_static/js/open_sidebar.js"></script>
+    <script src="_static/design-tabs.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+      <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="index.html">
+  <img src="_static/logo.svg" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="home.html">
+  OpenVINO 2024.1
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.openvino.ai/install">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://blog.openvino.ai/">
+  Blog
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://community.intel.com/t5/Intel-Distribution-of-OpenVINO/bd-p/distribution-openvino-toolkit">
+  Forum
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://www.intel.com/content/www/us/en/support/products/96066/software/development-software/openvino-toolkit.html">
+  Support
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://github.com/openvinotoolkit">
+  GitHub
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/openvinotoolkit/openvino" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="sst-github"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+</ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        
+<div class="dropdown sst-dropdown sst-dropdown-navbar">
+  <button class="btn sst-btn dropdown-toggle" type="button" id="version-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+  <div class="dropdown-menu" aria-labelledby="version-selector">
+  </div>
+</div>
+      </div>
+      
+      <div class="navbar-end-item">
+        
+
+<div class="dropdown sst-dropdown sst-dropdown-navbar">
+  <button class="btn sst-btn dropdown-toggle" type="button" id="language-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">English</button>
+  <div class="dropdown-menu" aria-labelledby="language-selector">
+    
+      
+        <a class="dropdown-item font-weight-bold" href="/latest/index.html">English</a>
+      
+    
+      
+        <a  class="dropdown-item" href="/cn/latest/index.html">Chinese</a>
+      
+    
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+        <div id="collapse-nav-wrapper" class="container-xl">
+          <button id="collapse-nav" class="button bttn-prm button-size-m" type="button" data-toggle="collapse" data-target="#nav-tree" aria-expanded="false" aria-controls="nav-tree">
+            Documentation navigation <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </nav>
+    
+<div id="info-banner" class="transition-banner"></div>
+<script src="_static/js/hide_banner.js"></script>
+
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar" id="nav-tree"><div>
+<atomic-search-interface id="sa-search">
+  <atomic-search-box redirection-url="search.html">
+  </atomic-search-box>
+</atomic-search-interface>
+</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+      
+      
+      
+    </div>
+  </nav>
+  
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection onthispage pt-5 pb-3">
+    On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-1-prepare-workspace">
+   Step 1: Prepare Workspace
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-2-write-python-code-for-the-server">
+   Step 2: Write Python Code For The Server
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-3-prepare-graph-configuration-file">
+   Step 3: Prepare Graph Configuration File
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-4-prepare-server-configuration-file">
+   Step 4: Prepare Server Configuration File
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-5-deploy-openvino-model-server">
+   Step 5: Deploy OpenVINO Model Server
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-6-create-client-application">
+   Step 6: Create Client Application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#step-7-send-requests-from-the-client">
+   Step 7: Send Requests From The Client
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                <div class="tocsection download-docs">
+  <div class="dropdown sst-dropdown">
+    <button class="button bttn-prm button-size-m" data-display="static" type="button" id="download-options"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Download Docs
+    </button>
+    <div class="dropdown-menu" aria-labelledby="download-options">
+      <a class="dropdown-item" href="#" onclick="window.print()">.pdf</a>
+      <a id="download-zip-btn" class="dropdown-item" href="#">.zip</a>
+    </div>
+  </div>
+</div>
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+              
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+            
+                <div>
+                  
+  <div class="section" id="python-support-in-openvino-model-server-quickstart">
+<h1>Python support in OpenVINO Model Server - quickstart<a class="headerlink" href="#python-support-in-openvino-model-server-quickstart" title="Permalink to this headline">¶</a></h1>
+<p>OpenVINO Model Server allows users to write custom processing nodes in Python, so they may have full control over what happens with the data reaching such node and what comes out of it.</p>
+<p>In this quickstart you will create a servable with a single custom Python code that will expect a string and return the same string, but all in uppercase.</p>
+<p>Check out the <a class="reference internal" href="ovms_docs_python_support_reference.html"><span class="doc std std-doc">documentation</span></a> to learn more about this feature.</p>
+<p>To achieve that let’s follow the steps:</p>
+<ol class="arabic simple">
+<li><p>Prepare Workspace</p></li>
+<li><p>Write Python Code For The Server</p></li>
+<li><p>Prepare Graph Configuration File</p></li>
+<li><p>Prepare Server Configuration File</p></li>
+<li><p>Deploy OpenVINO Model Server</p></li>
+<li><p>Create Client Application</p></li>
+<li><p>Send Requests From The Client</p></li>
+</ol>
+<div class="section" id="step-1-prepare-workspace">
+<h2>Step 1: Prepare Workspace<a class="headerlink" href="#step-1-prepare-workspace" title="Permalink to this headline">¶</a></h2>
+<p>Let’s have all the work done in a new <code class="docutils literal notranslate"><span class="pre">workspace</span></code> directory. Also create the following subdirectories:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">workspace/models</span></code> (catalog that will be mounted to the deployment)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workspace/models/python_model</span></code> (catalog with Python servable specification)</p></li>
+</ul>
+<p>You can do that in one go:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>workspace/models/python_model<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>workspace
+</pre></div>
+</div>
+<p>Since changing all the letters in the string to uppercase is a very basic example, the basic Python-enabled model server image without extra Python packages is sufficient. If you need some external modules, you need to add them to the image manually. For that simple use case, let’s use publicly available <code class="docutils literal notranslate"><span class="pre">openvino/model_server:latest</span></code> image from Docker Hub.</p>
+<p>You will also need a client module, so in your environment install a required dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>tritonclient<span class="o">[</span>grpc<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-write-python-code-for-the-server">
+<h2>Step 2: Write Python Code For The Server<a class="headerlink" href="#step-2-write-python-code-for-the-server" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start with the server side code. Your job is to implement an <code class="docutils literal notranslate"><span class="pre">OvmsPythonModel</span></code> class. Model Server expects it to have at least <code class="docutils literal notranslate"><span class="pre">execute</span></code> method implemented.</p>
+<p>In basic configuration <code class="docutils literal notranslate"><span class="pre">execute</span></code> method is called every time model receives a request. The server reads inputs from that request and passes them to <code class="docutils literal notranslate"><span class="pre">execute</span></code> function as an <code class="docutils literal notranslate"><span class="pre">inputs</span></code> argument.</p>
+<p><code class="docutils literal notranslate"><span class="pre">inputs</span></code> is a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">pyovms.Tensor</span></code> objects. In this case you will have only one input so the code can start like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">input_data</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">input_data</span></code> is <code class="docutils literal notranslate"><span class="pre">pyovms.Tensor</span></code> object that holds the data and some metadata like shape and datatype. At this point you need to decide what kind of data you expect to receive here.</p>
+<p>You will work on a string, so let’s say you expect <code class="docutils literal notranslate"><span class="pre">input_data</span></code> to be UTF-8 encoded string. In that case you can create an instances of <code class="docutils literal notranslate"><span class="pre">bytes</span></code> from <code class="docutils literal notranslate"><span class="pre">input_data</span></code> and then decode it to an actual string:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You also get to decide in what format you want to return the data. It makes sense to also return UTF-8 encoded string, so let’s do that:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output_data</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The outputs are expected to be a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">pyovms.Tensor</span></code>, so you will need to pack the output to <code class="docutils literal notranslate"><span class="pre">pyovms.Tensor</span></code> with proper output name (in that case <code class="docutils literal notranslate"><span class="pre">uppercase</span></code>) and return it as a list.</p>
+<p>The complete code would look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyovms</span> <span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="k">class</span> <span class="nc">OvmsPythonModel</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">input_data</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output_data</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">(</span><span class="s2">&quot;uppercase&quot;</span><span class="p">,</span> <span class="n">output_data</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Let’s create <code class="docutils literal notranslate"><span class="pre">model.py</span></code> file with that code and save it to <code class="docutils literal notranslate"><span class="pre">workspace/models/python_model</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">from pyovms import Tensor</span>
+
+<span class="s1">class OvmsPythonModel:</span>
+
+<span class="s1">    def execute(self, inputs: list):</span>
+<span class="s1">        input_data = inputs[0]</span>
+<span class="s1">        text = bytes(input_data).decode()</span>
+<span class="s1">        output_data = text.upper().encode()</span>
+<span class="s1">        return [Tensor(&quot;uppercase&quot;, output_data)]</span>
+<span class="s1">&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>models/python_model/model.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3-prepare-graph-configuration-file">
+<h2>Step 3: Prepare Graph Configuration File<a class="headerlink" href="#step-3-prepare-graph-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>Python logic execution in OpenVINO Model Server is supported via MediaPipe graphs. That means you need to prepare graph definition for your processing flow. In that case, a graph with just one node - Python node - is enough. Let’s create appropriate <code class="docutils literal notranslate"><span class="pre">graph.pbtxt</span></code> file in your <code class="docutils literal notranslate"><span class="pre">workspace/models/python_model</span></code> catalog:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">input_stream: &quot;OVMS_PY_TENSOR:text&quot;</span>
+<span class="s1">output_stream: &quot;OVMS_PY_TENSOR:uppercase&quot;</span>
+
+<span class="s1">node {</span>
+<span class="s1">  name: &quot;pythonNode&quot;</span>
+<span class="s1">  calculator: &quot;PythonExecutorCalculator&quot;</span>
+<span class="s1">  input_side_packet: &quot;PYTHON_NODE_RESOURCES:py&quot;</span>
+<span class="s1">  input_stream: &quot;INPUT:text&quot;</span>
+<span class="s1">  output_stream: &quot;OUTPUT:uppercase&quot;</span>
+<span class="s1">  node_options: {</span>
+<span class="s1">    [type.googleapis.com / mediapipe.PythonExecutorCalculatorOptions]: {</span>
+<span class="s1">      handler_path: &quot;/models/python_model/model.py&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>models/python_model/graph.pbtxt
+</pre></div>
+</div>
+<p>Above configuration file creates a graph with a single Python node that uses <code class="docutils literal notranslate"><span class="pre">PythonExecutorCalculator</span></code>, sets inputs and outputs and provides your Python code location in <code class="docutils literal notranslate"><span class="pre">handler_path</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">input_stream</span></code> and <code class="docutils literal notranslate"><span class="pre">output_stream</span></code> in the first two lines define graph inputs and outputs. The names to the <strong>right</strong> of <code class="docutils literal notranslate"><span class="pre">:</span></code> are names to be used in request and response. In this case:</p>
+<ul class="simple">
+<li><p><strong>input</strong>: “text”</p></li>
+<li><p><strong>output</strong>: “uppercase”</p></li>
+</ul>
+<p>You can also see <code class="docutils literal notranslate"><span class="pre">input_stream</span></code> and <code class="docutils literal notranslate"><span class="pre">output_stream</span></code> on the node level. Those refer to naming in the <code class="docutils literal notranslate"><span class="pre">execute</span></code> method code. Notice how in the previous step, in <code class="docutils literal notranslate"><span class="pre">execute</span></code> implementation, you name the output tensor - “uppercase”.</p>
+<p>In that case the names of the streams both on the graph and on the node level are exactly the same, which means that a graph input is also a node input and a node output is also a graph output.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">input_side_packet</span></code> value is an internal field used by the model server to share resources between graph instances - do not change it.</p>
+</div>
+<div class="section" id="step-4-prepare-server-configuration-file">
+<h2>Step 4: Prepare Server Configuration File<a class="headerlink" href="#step-4-prepare-server-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>Last piece of configuration would be the model server configuration file.
+Create <code class="docutils literal notranslate"><span class="pre">config.json</span></code> with the following content in <code class="docutils literal notranslate"><span class="pre">workspace/models</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">{</span>
+<span class="s1">    &quot;model_config_list&quot;: [],</span>
+<span class="s1">    &quot;mediapipe_config_list&quot;: [</span>
+<span class="s1">    {</span>
+<span class="s1">        &quot;name&quot;:&quot;python_model&quot;,</span>
+<span class="s1">        &quot;graph_path&quot;:&quot;/models/python_model/graph.pbtxt&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">    ]</span>
+<span class="s1">}</span>
+<span class="s1">&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>models/config.json
+</pre></div>
+</div>
+<p>This tells OpenVINO Model Server to to serve the graph under given name <code class="docutils literal notranslate"><span class="pre">python_model</span></code>.</p>
+</div>
+<div class="section" id="step-5-deploy-openvino-model-server">
+<h2>Step 5: Deploy OpenVINO Model Server<a class="headerlink" href="#step-5-deploy-openvino-model-server" title="Permalink to this headline">¶</a></h2>
+<p>Before running the server let’s check if all files required for deployment are in place. Check the contents of <code class="docutils literal notranslate"><span class="pre">workspace/models</span></code> catalog as it will be mounted to the container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tree<span class="w"> </span>models
+models
+├──<span class="w"> </span>config.json
+└──<span class="w"> </span>python_model
+<span class="w">    </span>├──<span class="w"> </span>graph.pbtxt
+<span class="w">    </span>└──<span class="w"> </span>model.py
+</pre></div>
+</div>
+<p>Now let’s run the server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">9000</span>:9000<span class="w"> </span>-v<span class="w"> </span><span class="nv">$PWD</span>/models:/models<span class="w"> </span>openvino/model_server:latest<span class="w"> </span>--config_path<span class="w"> </span>/models/config.json<span class="w"> </span>--port<span class="w"> </span><span class="m">9000</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-6-create-client-application">
+<h2>Step 6: Create Client Application<a class="headerlink" href="#step-6-create-client-application" title="Permalink to this headline">¶</a></h2>
+<p>Now that the Python model is deployed, you can focus on the other end - the client application. When writing the client keep in mind how the server side code looks like as they must be complementary.</p>
+<p>First let’s connect to the server hosted on <code class="docutils literal notranslate"><span class="pre">localhost</span></code> with gRPC interface available on port <code class="docutils literal notranslate"><span class="pre">9000</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tritonclient.grpc</span> <span class="k">as</span> <span class="nn">grpcclient</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">grpcclient</span><span class="o">.</span><span class="n">InferenceServerClient</span><span class="p">(</span><span class="s2">&quot;localhost:9000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You will send a string, so let’s create one and encode it to UTF-8, because that’s what the server side code expects:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;Make this text uppercase.&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now let’s pack that data into a gRPC structure that will be sent to the server:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">infer_input</span> <span class="o">=</span> <span class="n">grpcclient</span><span class="o">.</span><span class="n">InferInput</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)],</span> <span class="s2">&quot;BYTES&quot;</span><span class="p">)</span>
+<span class="n">infer_input</span><span class="o">.</span><span class="n">_raw_content</span> <span class="o">=</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p>You’ve created InferInput object that will correspond to the graph input with the name “text”, shape [len(data)] - where len(data) is the number of encoded bytes - and datatype “BYTES”. The data itself has been written to a raw_content field. All of these values can be accessed on the server side.</p>
+<p>The last part would be to send this data to the server:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span><span class="s2">&quot;python_model&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">infer_input</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">as_numpy</span><span class="p">(</span><span class="s2">&quot;uppercase&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>That part will pack <code class="docutils literal notranslate"><span class="pre">infer_input</span></code> into a request and send it to the servable called <code class="docutils literal notranslate"><span class="pre">uppercase_model</span></code>.</p>
+<p>Server is expected to respond with an output containing UTF-8 encoded string, so in the second line you read it, decode it to an actual string and print it.</p>
+<p>Let’s save the entire code to <code class="docutils literal notranslate"><span class="pre">client.py</span></code> file inside <code class="docutils literal notranslate"><span class="pre">workspace</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">import tritonclient.grpc as grpcclient</span>
+<span class="s1">client = grpcclient.InferenceServerClient(&quot;localhost:9000&quot;)</span>
+<span class="s1">data = &quot;Make this text uppercase.&quot;.encode()</span>
+<span class="s1">infer_input = grpcclient.InferInput(&quot;text&quot;, [len(data)], &quot;BYTES&quot;)</span>
+<span class="s1">infer_input._raw_content = data</span>
+<span class="s1">results = client.infer(&quot;python_model&quot;, [infer_input])</span>
+<span class="s1">print(results.as_numpy(&quot;uppercase&quot;).tobytes().decode())</span>
+<span class="s1">&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>client.py<span class="w"> </span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-7-send-requests-from-the-client">
+<h2>Step 7: Send Requests From The Client<a class="headerlink" href="#step-7-send-requests-from-the-client" title="Permalink to this headline">¶</a></h2>
+<p>Once you have model server up and running, let’s send a text: <code class="docutils literal notranslate"><span class="pre">&quot;Make</span> <span class="pre">this</span> <span class="pre">text</span> <span class="pre">uppercase.&quot;</span></code>.</p>
+<p>Simply run your <code class="docutils literal notranslate"><span class="pre">client.py</span></code> from the <code class="docutils literal notranslate"><span class="pre">workspace</span></code> catalog and see the results:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>client.py
+MAKE<span class="w"> </span>THIS<span class="w"> </span>TEXT<span class="w"> </span>UPPERCASE.
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                </div>
+            
+            
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+<footer class="footer mt-5 mt-md-0">
+</footer>
+  </body>
+</html>
