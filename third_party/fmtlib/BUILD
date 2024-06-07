@@ -66,7 +66,7 @@ cmake(
         "CMAKE_CXX_FLAGS": "-D_GLIBCXX_USE_CXX11_ABI=1 -Wno-error=deprecated-declarations -Wuninitialized",
     },
     lib_source = ":all_srcs",
-    out_lib_dir = "lib",
+    out_lib_dir = "lib64",
     # linking order
     out_static_libs = ["libfmt.a"],
     tags = ["requires-network"],

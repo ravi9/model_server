@@ -34,13 +34,13 @@ cc_library(
     deps = select({
             "//:ubuntu_build": [
                 "@llm_engine//:llm_engine_ubuntu",
+                "@Jinja2Cpp_Ubuntu//:libjinja2cpp",
             ],
             "//:redhat_build": [
                 "@llm_engine//:llm_engine_redhat",
+                "@Jinja2Cpp_Redhat//:libjinja2cpp",
             ],
-        }) + [
-        "@Jinja2Cpp//:libjinja2cpp",
-        ],
+        }),
     visibility = ["//visibility:public"],
     copts = COPTS_ADJUSTED,
     linkopts = LINKOPTS_ADJUSTED,

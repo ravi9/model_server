@@ -154,7 +154,7 @@ git_repository( # Using commit past 0.9.0 that adds cmake 3.26.2 for model api. 
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 
-rules_foreign_cc_dependencies(cmake_version="3.26.2")
+rules_foreign_cc_dependencies(cmake_version="3.26.0")
 
 # gflags needed by glog
 http_archive(
@@ -298,9 +298,6 @@ rules_pkg_dependencies()
 load("@//third_party/aws-sdk-cpp:aws-sdk-cpp.bzl", "aws_sdk_cpp")
 aws_sdk_cpp()
 
-load("@//third_party/jinja2cpp:jinja2cpp.bzl", "jinja2cpp")
-jinja2cpp()
-
 load("@//third_party/llm_engine:llm_engine.bzl", "llm_engine")
 llm_engine()
 
@@ -325,8 +322,15 @@ new_local_repository(
     path = "/usr/local/lib/",
     build_file = "@//third_party/boost:BUILD"
 )
+
 new_local_repository(
-    name = "Jinja2Cpp",
+    name = "Jinja2Cpp_Redhat",
+    path = "/jinja2cpp/Jinja2Cpp/build/install/lib64",
+    build_file = "@//third_party/Jinja2Cpp:BUILD"
+)
+
+new_local_repository(
+    name = "Jinja2Cpp_Ubuntu",
     path = "/jinja2cpp/Jinja2Cpp/build/install/lib",
     build_file = "@//third_party/Jinja2Cpp:BUILD"
 )
@@ -373,11 +377,10 @@ http_archive(
 )
 
 # RapidJSON
-http_archive(
+git_repository(
     name = "com_github_tencent_rapidjson",
-    url = "https://github.com/Tencent/rapidjson/archive/v1.1.0.zip",
-    sha256 = "8e00c38829d6785a2dfb951bb87c6974fa07dfe488aa5b25deec4b8bc0f6a3ab",
-    strip_prefix = "rapidjson-1.1.0",
+    remote = "https://github.com/Tencent/rapidjson.git",
+    commit = "ab1842a2dae061284c0a62dca1cc6d5e7e37e346",
     build_file = "@//third_party/rapidjson:BUILD"
 )
 

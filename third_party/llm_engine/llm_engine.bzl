@@ -20,10 +20,7 @@ def llm_engine():
     new_git_repository(
         name = "llm_engine",
         remote = "https://github.com/atobiszei/openvino.genai",
-        commit = "347862e61feb339ddcc8192a27e74a8ecd0e50a6",
-#        commit = "20ab985f8798c72e0443d9bc8d335bf772c45dd6", # does not work
-#        commit = "9ebc98b46ee8c9c6a2ad2475d1c7c31b9d959ac9", # works
-        #commit = "73ef8f2699611c7058135c1a7a316c4c748bd92e", works with Ilya jinja
+        commit = "1e86ba5555895965b9aeaf6c8bd06aabc88b493e", # my_fork/templates_branch_rebase
         build_file = "@_llm_engine//:BUILD",
         init_submodules = True,
         recursive_init_submodules = True,
@@ -79,6 +76,7 @@ cmake(
         "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "lib",
         "JINJA2CPP_DEPS_MODE": "internal",
         "JINJA2CPP_BUILD_TESTS": "OFF",
+        "JINJA2CPP_BAZEL_BUILD": "ON",
     }},
     env = {{
         "OpenVINO_DIR": "{OpenVINO_DIR}",
@@ -86,16 +84,9 @@ cmake(
         "HTTPS_PROXY": "{https_proxy}",
     }},
     lib_source = ":all_srcs",
-    #out_lib_dir = "lib",
-    out_lib_dir = "",
-    out_bin_dir = "",
-    out_binaries = [],
-    out_data_dirs = ["_deps"],
-    # linking order
+    out_lib_dir = "lib64",
     out_static_libs = [
-            #"libopenvino_continuous_batching.a",
             "lib/libopenvino_continuous_batching.a",
-            #"_deps/jinja2cpp-build/lib/libjinja2cpp.a",
         ],
     install = True,
     tags = ["requires-network"],
@@ -129,7 +120,10 @@ cmake(
         "BUILD_SHARED_LIBS": "OFF",
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
         "CMAKE_CXX_FLAGS": "-D_GLIBCXX_USE_CXX11_ABI=1 -Wno-error=deprecated-declarations -Wuninitialized\",
-        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "lib"
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "lib",
+        "JINJA2CPP_DEPS_MODE": "internal",
+        "JINJA2CPP_BUILD_TESTS": "OFF",
+        "JINJA2CPP_BAZEL_BUILD": "ON",
     }},
     env = {{
         "OpenVINO_DIR": "{OpenVINO_DIR}",

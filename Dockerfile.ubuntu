@@ -80,19 +80,12 @@ RUN CASABLANCA_DIR=/azure/cpprestsdk cmake .. -DCMAKE_CXX_FLAGS="-fPIC -Wno-erro
 # no-error flag related to https://github.com/aws/aws-sdk-cpp/issues/1582
 ####### End of Azure SDK
 
-
-WORKDIR /cmake_new
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.29.3/cmake-3.29.3-linux-x86_64.sh && chmod u+x cmake-3.29.3-linux-x86_64.sh && ./cmake-3.29.3-linux-x86_64.sh --skip-license
-#~/cmake_new/cmake-3.29.3-linux-x86_64/bin/ccmake
-
 WORKDIR /jinja2cpp
-RUN git clone --recursive --branch atobisze_wa_fix_install https://github.com/atobiszei/Jinja2Cpp.git
+RUN git clone --recursive --branch jinja_bazel_fixes https://github.com/atobiszei/Jinja2Cpp.git
 WORKDIR /jinja2cpp/Jinja2Cpp/build
-RUN /cmake_new/bin/cmake .. -DCMAKE_INSTALL_PREFIX="./install" -DJINJA2CPP_DEPS_MODE=internal
-#RUN /cmake_new/bin/cmake build .  -j 24 --target install
-#RUN /cmake_new/bin/cmake --install .
-RUN /cmake_new/bin/cmake --build . --config Release  --verbose -- VERBOSE=1 -j 12
-RUN /cmake_new/bin/cmake --install . --config Release
+RUN cmake .. -DCMAKE_INSTALL_PREFIX="./install" -DJINJA2CPP_DEPS_MODE=internal -DJINJA2CPP_BAZEL_BUILD=ON
+RUN cmake --build . --config Release  --verbose -- VERBOSE=1 -j 12
+RUN cmake --install . --config Release
 RUN tree /jinja2cpp/Jinja2Cpp/build/install/lib
 
 ####### Build OpenCV
@@ -124,7 +117,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
             python2-dev \
             python3-dev \
             python3-pip \
-            rapidjson-dev \
             unzip \
             gdb \
             vim \
