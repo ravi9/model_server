@@ -380,6 +380,11 @@ Status ModelInstance::loadTensors(const ModelConfig& config, bool needsToApplyLa
         SPDLOG_LOGGER_ERROR(modelmanager_logger, "Error during loading output tensors");
         return status;
     }
+    if (this->outputsInfo.size() == 0) {
+        SPDLOG_LOGGER_ERROR(modelmanager_logger, "Model loaded with empty outputs");
+        return StatusCode::INTERNAL_ERROR;
+
+    }
     return StatusCode::OK;
 }
 
