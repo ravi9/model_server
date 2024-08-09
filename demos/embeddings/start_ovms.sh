@@ -1,1 +1,3 @@
 docker run -d -p 9000:9000 -p 9001:9001 -v $(pwd)/bge_combined/:/model/1 openvino/model_server:2024.3 --model_name test --model_path /model --cpu_extension /ovms/lib/libopenvino_tokenizers.so --port 9000 --rest_port 9001 --log_level DEBUG
+
+docker run -d -p 10000:10000 -p 10001:10001 -v $(pwd)/rerank_combined:/model/1 openvino/model_server --model_name test --model_path /model --cpu_extension /ovms/lib/libopenvino_tokenizers.so --port 10000 --rest_port 10001 --log_level DEBUG
