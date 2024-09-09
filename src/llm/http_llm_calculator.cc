@@ -155,7 +155,12 @@ public:
                         return absl::CancelledError();
                     }
 
-                    ov::Tensor finalPromptIds = nodeResources->cbPipe->get_tokenizer().encode(finalPrompt).input_ids;
+                    ov::Tensor finalPromptIds;
+                    try {
+                        finalPromptIds = nodeResources->cbPipe->get_tokenizer().encode(finalPrompt).input_ids;
+                    } catch (std::exception& e) {
+                        return absl::Status(absl::StatusCode::kInvalidArgument, std::string{"Error while tokenizing prompt: ["} + finalPrompt + std::string{"], with error: "} + std::string(e.what()));
+                    }
                     this->apiHandler->setPromptTokensUsage(finalPromptIds.get_size());
                     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "{}", getPromptTokensString(finalPromptIds));
 
@@ -237,6 +242,8 @@ public:
                 }
             }
         } catch (ov::AssertFailure& e) {
+            return absl::InvalidArgumentError(e.what());
+        } catch (const std::exception& e) {
             return absl::InvalidArgumentError(e.what());
         } catch (...) {
             return absl::InvalidArgumentError("Response generation failed");
