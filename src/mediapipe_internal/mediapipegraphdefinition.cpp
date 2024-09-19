@@ -33,6 +33,7 @@
 #include "../modelmanager.hpp"
 #include "../ov_utils.hpp"
 #if (PYTHON_DISABLE == 0)
+#include "src/llm/llm_calculator.pb.h"
 #include "../llm/llm_executor.hpp"
 #include "../llm/llmnoderesources.hpp"
 #include "../python/pythonnoderesources.hpp"
@@ -95,6 +96,20 @@ Status MediapipeGraphDefinition::validateForConfigLoadableness() {
         SPDLOG_LOGGER_ERROR(modelmanager_logger, "Trying to parse mediapipe graph definition: {} failed", this->getName(), this->chosenConfig);
         return StatusCode::MEDIAPIPE_GRAPH_CONFIG_FILE_INVALID;
     }
+    for (int i = 0; i < this->config.node_size(); ++i) {
+        auto* node = config.mutable_node(i);
+
+        // Create an instance of your custom options
+        mediapipe::MyCustomOptions custom_options;
+        custom_options.set_servable_name(this->name);
+        node->add_node_options()->PackFrom(custom_options);
+
+        // Set fields in your custom options as needed
+        //custom_options->set_some_field("Some value");
+        // Add other fields as necessary
+    }
+    //auto* option = this->config.add_graph_options();
+    //(void)option;
     return StatusCode::OK;
 }
 

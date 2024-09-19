@@ -48,3 +48,12 @@ message LLMCalculatorOptions {
 
     optional bool enable_prefix_caching = 12 [default = false];
 }
+
+message MyCustomOptions {
+  extend mediapipe.CalculatorOptions {
+    // https://github.com/google/mediapipe/issues/634 have to be unique in app
+    // no rule to obtain this
+    optional MyCustomOptions ext = 103413750;
+    }
+    required string servable_name = 1;
+}

@@ -656,6 +656,8 @@ OVMS_Status* OVMS_ServerSetGlobalVADisplay(void* vaDisplay);
 //  \param metadata The metadata object
 void OVMS_ServableMetadataDelete(OVMS_ServableMetadata* metadata);
 
+OVMS_Status* OVMS_AddMetric(OVMS_Server* server, const char* servableName, const char* name);
+
 #ifdef __cplusplus
 }
 #endif

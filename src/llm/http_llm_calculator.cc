@@ -22,6 +22,8 @@
 #include "mediapipe/framework/port/canonical_errors.h"
 #pragma GCC diagnostic pop
 
+#include "src/llm/llm_calculator.pb.h"
+
 #include <openvino/genai/continuous_batching_pipeline.hpp>
 
 #include "../profiler.hpp"
@@ -67,6 +69,8 @@ class HttpLLMCalculator : public CalculatorBase {
 
 public:
     static absl::Status GetContract(CalculatorContract* cc) {
+        SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA GetContract GetNodeName[{}]",
+            cc->GetNodeName());
         RET_CHECK(!cc->Inputs().GetTags().empty());
         RET_CHECK(!cc->Outputs().GetTags().empty());
         cc->Inputs().Tag(INPUT_TAG_NAME).Set<InputDataType>();
@@ -78,12 +82,20 @@ public:
     }
 
     absl::Status Close(CalculatorContext* cc) final {
+        SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Close");
         OVMS_PROFILE_FUNCTION();
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator [Node: {} ] Close", cc->NodeName());
         return absl::OkStatus();
     }
 
     absl::Status Open(CalculatorContext* cc) final {
+        auto* cntr = cc->GetCounterFactory()->GetCounter("HMM");
+        cntr->IncrementBy(5);
+        
+        const auto& opt = cc->Options<MyCustomOptions>();
+        (void)opt;
+        SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Open NodeName[{}] NodeId[{}] CalculatorType[{}] Cntr[{}] ServableName[{}]",
+            cc->NodeName(), cc->NodeId(), cc->CalculatorType(), cntr->Get(), opt.servable_name());
         OVMS_PROFILE_FUNCTION();
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Open start", cc->NodeName());
         ovms::LLMNodeResourcesMap nodeResourcesMap = cc->InputSidePackets().Tag(LLM_SESSION_SIDE_PACKET_TAG).Get<ovms::LLMNodeResourcesMap>();
@@ -95,6 +107,7 @@ public:
     }
 
     absl::Status Process(CalculatorContext* cc) final {
+        SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Process");
         OVMS_PROFILE_FUNCTION();
         RET_CHECK(this->nodeResources != nullptr);
 
