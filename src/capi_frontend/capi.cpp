@@ -34,10 +34,15 @@
 #if (MEDIAPIPE_DISABLE == 0)
 #include "../mediapipe_internal/mediapipegraphdefinition.hpp"
 #endif
+#include "../metric.hpp"
+#include "../metric_family.hpp"
+#include "../metric_module.hpp"
+#include "../metric_registry.hpp"
 #include "../model_service.hpp"
 #include "../modelinstance.hpp"
 #include "../modelinstanceunloadguard.hpp"
 #include "../modelmanager.hpp"
+#include "../module_names.hpp"
 #include "../ovms.h"  // NOLINT
 #include "../prediction_service.hpp"
 #include "../profiler.hpp"
@@ -1309,6 +1314,44 @@ DLL_PUBLIC void OVMS_ServableMetadataDelete(OVMS_ServableMetadata* metadata) {
     if (metadata == nullptr)
         return;
     delete reinterpret_cast<ovms::ServableMetadata*>(metadata);
+}
+
+DLL_PUBLIC OVMS_Status* OVMS_ServerMetricFamilyNew(OVMS_Server* server, OVMS_MetricFamily** family, /* TODO: Kind */ const char* name, const char* description) {
+    SPDLOG_INFO("HELLO 123");
+    if (server == nullptr)
+        return nullptr; // TODO
+    ovms::Server* srv = reinterpret_cast<ovms::Server*>(server);
+    (void)srv;
+    const ovms::MetricModule* metricModule = reinterpret_cast<const ovms::MetricModule*>(srv->getModule(ovms::METRICS_MODULE_NAME));
+    ovms::MetricRegistry& registry = metricModule->getRegistry();
+    (void)registry;
+
+    std::shared_ptr<ovms::MetricFamily<ovms::MetricCounter>> ovmsFamily = registry.createFamily<ovms::MetricCounter>(std::string(name), std::string(description));
+    (void)ovmsFamily;
+
+    auto* holder = new ovms::MetricFamilyHolder<ovms::MetricCounter>{ovmsFamily};
+
+    *family = (OVMS_MetricFamily*)holder;
+
+    //srv->shutdownModules();
+    return nullptr;
+}
+
+DLL_PUBLIC OVMS_Status* OVMS_ServerMetricFamilyDelete(OVMS_Server* server, OVMS_MetricFamily* family) {
+    SPDLOG_INFO("HELLO 123");
+    if (server == nullptr)
+        return nullptr;  // TODO
+    ovms::Server* srv = reinterpret_cast<ovms::Server*>(server);
+    (void)srv;
+    const ovms::MetricModule* metricModule = reinterpret_cast<const ovms::MetricModule*>(srv->getModule(ovms::METRICS_MODULE_NAME));
+    ovms::MetricRegistry& registry = metricModule->getRegistry();
+    (void)registry;
+    
+    ovms::MetricFamilyHolder<ovms::MetricCounter>* holder = (ovms::MetricFamilyHolder<ovms::MetricCounter>*)family;
+    registry.remove(holder->ptr);
+    delete holder;
+
+    return nullptr;
 }
 
 OVMS_Status* OVMS_ServerSetGlobalVADisplay(void* vaDisplay) {

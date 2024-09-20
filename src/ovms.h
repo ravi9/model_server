@@ -32,6 +32,10 @@ typedef struct OVMS_ModelsSettings_ OVMS_ModelsSettings;
 typedef struct OVMS_ServableMetadata_ OVMS_ServableMetadata;
 typedef struct OVMS_Metadata_ OVMS_Metadata;
 
+typedef struct OVMS_MetricFamily_ OVMS_MetricFamily;
+typedef struct OVMS_Metric_ OVMS_Metric;
+
+
 #define OVMS_API_VERSION_MAJOR 1
 #define OVMS_API_VERSION_MINOR 1
 
@@ -656,7 +660,7 @@ OVMS_Status* OVMS_ServerSetGlobalVADisplay(void* vaDisplay);
 //  \param metadata The metadata object
 void OVMS_ServableMetadataDelete(OVMS_ServableMetadata* metadata);
 
-OVMS_Status* OVMS_AddMetric(OVMS_Server* server, const char* servableName, const char* name);
+OVMS_Status* OVMS_ServerMetricFamilyNew(OVMS_Server* server, OVMS_MetricFamily** family, /* TODO: Kind */ const char* name, const char* description);
 
 #ifdef __cplusplus
 }

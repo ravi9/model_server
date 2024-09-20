@@ -27,6 +27,7 @@
 #include <openvino/genai/continuous_batching_pipeline.hpp>
 
 #include "../profiler.hpp"
+#include "../ovms.h"  // NOLINT
 #include "apis/openai_completions.hpp"
 #include "http_payload.hpp"
 #include "llmnoderesources.hpp"
@@ -97,6 +98,9 @@ public:
         SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Open NodeName[{}] NodeId[{}] CalculatorType[{}] Cntr[{}] ServableName[{}]",
             cc->NodeName(), cc->NodeId(), cc->CalculatorType(), cntr->Get(), opt.servable_name());
         OVMS_PROFILE_FUNCTION();
+
+        //OVMS_ServerMetricFamilyNew()
+
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Open start", cc->NodeName());
         ovms::LLMNodeResourcesMap nodeResourcesMap = cc->InputSidePackets().Tag(LLM_SESSION_SIDE_PACKET_TAG).Get<ovms::LLMNodeResourcesMap>();
         auto it = nodeResourcesMap.find(cc->NodeName());

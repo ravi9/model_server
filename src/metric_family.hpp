@@ -53,4 +53,10 @@ private:
     friend class MetricRegistry;
 };
 
+
+template <typename MetricType>
+struct MetricFamilyHolder {
+    std::shared_ptr<MetricFamily<MetricType>> ptr;
+};
+
 }  // namespace ovms

@@ -51,7 +51,8 @@ cc_library(
         ":llmnoderesources",
         ":httppayload",
         ":text_processor",
-        ":openai_completions_api_handler"
+        ":openai_completions_api_handler",
+        "//src:ovms_header"
     ],
     visibility = ["//visibility:public"],
     local_defines = COMMON_LOCAL_DEFINES,
