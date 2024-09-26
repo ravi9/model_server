@@ -1317,9 +1317,12 @@ DLL_PUBLIC void OVMS_ServableMetadataDelete(OVMS_ServableMetadata* metadata) {
 }
 
 DLL_PUBLIC OVMS_Status* OVMS_ServerMetricFamilyNew(OVMS_Server* server, OVMS_MetricFamily** family, /* TODO: Kind */ const char* name, const char* description) {
-    SPDLOG_INFO("HELLO 123");
+    SPDLOG_WARN("HELLO 123");
     if (server == nullptr)
+    {
+        exit(1);
         return nullptr; // TODO
+    }
     ovms::Server* srv = reinterpret_cast<ovms::Server*>(server);
     (void)srv;
     const ovms::MetricModule* metricModule = reinterpret_cast<const ovms::MetricModule*>(srv->getModule(ovms::METRICS_MODULE_NAME));
@@ -1337,8 +1340,18 @@ DLL_PUBLIC OVMS_Status* OVMS_ServerMetricFamilyNew(OVMS_Server* server, OVMS_Met
     return nullptr;
 }
 
+
+DLL_PUBLIC OVMS_Status* OVMS_MetricNew(OVMS_MetricFamily* family, OVMS_Metric** metric /*labels*/) {
+    ovms::MetricFamilyHolder<ovms::MetricCounter>* fam = (ovms::MetricFamilyHolder<ovms::MetricCounter>*)family;
+    ovms::MetricHolder<ovms::MetricCounter> *met = new ovms::MetricHolder<ovms::MetricCounter>{fam->ptr->addMetric({}, {})};
+    met->ptr->increment(11.0);
+    *metric = (OVMS_Metric*)met;
+    return nullptr;
+}
+
+
 DLL_PUBLIC OVMS_Status* OVMS_ServerMetricFamilyDelete(OVMS_Server* server, OVMS_MetricFamily* family) {
-    SPDLOG_INFO("HELLO 123");
+    SPDLOG_WARN("HELLO 123");
     if (server == nullptr)
         return nullptr;  // TODO
     ovms::Server* srv = reinterpret_cast<ovms::Server*>(server);

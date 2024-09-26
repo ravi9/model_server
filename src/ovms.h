@@ -662,6 +662,8 @@ void OVMS_ServableMetadataDelete(OVMS_ServableMetadata* metadata);
 
 OVMS_Status* OVMS_ServerMetricFamilyNew(OVMS_Server* server, OVMS_MetricFamily** family, /* TODO: Kind */ const char* name, const char* description);
 
+OVMS_Status* OVMS_MetricNew(OVMS_MetricFamily* family, OVMS_Metric** metric /*labels*/);
+
 #ifdef __cplusplus
 }
 #endif

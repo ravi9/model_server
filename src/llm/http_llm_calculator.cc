@@ -92,14 +92,28 @@ public:
     absl::Status Open(CalculatorContext* cc) final {
         auto* cntr = cc->GetCounterFactory()->GetCounter("HMM");
         cntr->IncrementBy(5);
-        
-        const auto& opt = cc->Options<MyCustomOptions>();
-        (void)opt;
+
+        std::string servableName;
+        try {
+            // Try catch for using calculator outside of OVMS
+            const auto& opt = cc->Options<MyCustomOptions>();
+            servableName = opt.servable_name();
+            
+        } catch (...) {
+        }
         SPDLOG_WARN("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Open NodeName[{}] NodeId[{}] CalculatorType[{}] Cntr[{}] ServableName[{}]",
-            cc->NodeName(), cc->NodeId(), cc->CalculatorType(), cntr->Get(), opt.servable_name());
+            cc->NodeName(), cc->NodeId(), cc->CalculatorType(), cntr->Get(), servableName);
         OVMS_PROFILE_FUNCTION();
 
-        //OVMS_ServerMetricFamilyNew()
+        OVMS_Server* server=nullptr;
+        OVMS_ServerNew(&server);
+        OVMS_MetricFamily* family=nullptr;  // # ovms_custom_metric this is my custom metric
+        OVMS_ServerMetricFamilyNew(server, &family, "ovms_ttft", "time to first token");
+        OVMS_Metric* met=nullptr;
+        OVMS_MetricNew(family, &met/*, labels_map (with servable name)*/); //# ovms_custom_metric{name="llama3.2"} 55
+
+
+        //OVMS_MetricIncrement(met, 50);
 
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Open start", cc->NodeName());
         ovms::LLMNodeResourcesMap nodeResourcesMap = cc->InputSidePackets().Tag(LLM_SESSION_SIDE_PACKET_TAG).Get<ovms::LLMNodeResourcesMap>();

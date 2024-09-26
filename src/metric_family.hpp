@@ -59,4 +59,9 @@ struct MetricFamilyHolder {
     std::shared_ptr<MetricFamily<MetricType>> ptr;
 };
 
+template <typename MetricType>
+struct MetricHolder {
+    std::unique_ptr<MetricType> ptr;
+};
+
 }  // namespace ovms
