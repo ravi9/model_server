@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <functional>
 
 #include <spdlog/spdlog.h>
 
@@ -35,6 +36,11 @@
 
 #include "http_rest_api_handler.hpp"
 #include "status.hpp"
+
+#include "drogon_endpoints.hpp"
+#include "module_names.hpp"
+#include "servablemanagermodule.hpp"
+#include "server.hpp"
 
 #include <drogon/drogon.h>
 using namespace drogon;
@@ -276,7 +282,7 @@ std::unique_ptr<http_server> createAndStartHttpServer(const std::string& address
     return nullptr;
 }
 
-void createAndStartDrogonServer() {
+void createAndStartDrogonServer(ovms::Server& ovmsServer) {
     // `registerHandler()` adds a handler to the desired path. The handler is
     // responsible for generating a HTTP response upon an HTTP request being
     // sent to Drogon
@@ -315,27 +321,19 @@ void createAndStartDrogonServer() {
             callback(resp);
         });
 
+        ovms::ModelManager* mm = &(dynamic_cast<const ServableManagerModule*>(ovmsServer.getModule(SERVABLE_MANAGER_MODULE_NAME))->getServableManager());
         app().registerHandler(
-        "/new_stream",
-        [](const HttpRequestPtr &req,
-           std::function<void(const HttpResponsePtr &)> &&callback) {
-            LOG_INFO << "Received request for server side event";
-            auto resp = drogon::HttpResponse::newAsyncStreamResponse(
-                [](drogon::ResponseStreamPtr stream) {
-                    //std::thread([stream =
-                    //                 std::shared_ptr<drogon::ResponseStream>{
-                    //                     std::move(stream)}]() mutable {
-                        for (int i = 0; i < 100; i++) {
-                            std::cout << std::boolalpha << stream->send("data: [hello] \n\n")
-                                    << std::endl;
-                            std::this_thread::sleep_for(std::chrono::seconds(2));
-                        }
-                        stream->close();
-                    //}).detach();
-                });
-            resp->setContentTypeCodeAndCustomString(
-                ContentType::CT_NONE, "text/event-stream");
-            callback(resp);
+        "/v3/completions",
+         [mm](const drogon::HttpRequestPtr &req,
+           std::function<void(const drogon::HttpResponsePtr &)> &&callback) {
+            processDrogonV3(mm, req, std::move(callback)); // Call your handler directly
+        });
+
+        app().registerHandler(
+        "/v3/chat/completions",
+         [mm](const drogon::HttpRequestPtr &req,
+           std::function<void(const drogon::HttpResponsePtr &)> &&callback) {
+            processDrogonV3(mm, req, std::move(callback)); // Call your handler directly
         });
 
     LOG_INFO << "Server running on 0.0.0.0:11339";
