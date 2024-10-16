@@ -128,3 +128,14 @@ PYBIND_DEPS = [
     "@python3_linux//:python3-lib",
     "@pybind11//:pybind11_embed",
 ]
+
+BORINGSSSL_PATH = select({
+                "//conditions:default": "/usr/",
+                "//src:windows" : "C:\\opt\\boringssl",
+                })
+
+BORINGSSSL_BUILD = select({
+                "//conditions:default": "@//third_party/boringssl:BUILD",
+                "//src:windows" :"@//third_party/boringssl:boringssl_windows.BUILD",
+                })
+                

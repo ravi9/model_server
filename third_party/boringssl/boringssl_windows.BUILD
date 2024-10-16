@@ -17,5 +17,8 @@
 # TODO: find out what is required on windows for #include "MD5.h", current assumption nothing is required.
 cc_library(
     name = "ssl",
+    hdrs = glob(["include\\openssl\\*"]),
+    srcs = glob(["lib\\libssl.lib"]),
+    copts = ["-lcrypto", "-lssl"],
     visibility = ["//visibility:public"],
 )

@@ -120,7 +120,7 @@ cc_shared_library(
         "@ruy//:__subpackages__",
         "@azure//:__subpackages__",
         "@cpprest//:__subpackages__",
-        "//third_party:boringssl//:__subpackages__",
+        "//boringssl//:__subpackages__",
         "//third_party:opencv//:__subpackages__",
     ] + select({
         "//:not_disable_mediapipe": [
@@ -976,7 +976,7 @@ cc_library(
     hdrs = ["filesystem.hpp",],
     srcs = ["filesystem.cpp",],
     deps = [
-            "//third_party:boringssl",
+            "@boringssl//:ssl",
             "libovmslogging",
             "libovmsmodelversioning",
             "libovmsstatus",],

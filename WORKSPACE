@@ -66,15 +66,15 @@ http_archive(
 # alternative would be to use cmake build of grpc and flag
 # to use system ssl instead
 new_local_repository(
-    name = "linux_boringssl",
+    name = "boringssl",
+    path = "",
     build_file = "@//third_party/boringssl:BUILD",
-    path = "/usr/",
 )
 
 new_local_repository(
     name = "windows_boringssl",
     build_file = "@//third_party/boringssl:boringssl_windows.BUILD",
-    path = "C:\\opt\\boringssl",
+    path = "C:\\opt\\boringssl\\",
 )
 
 # overriding GCS curl dependency to force using system provided openssl
