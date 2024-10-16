@@ -433,3 +433,10 @@ git_repository(
     remote = "https://github.com/nlohmann/json/",
     tag = "v3.11.3",
 )
+
+# Drogon HTTP Server
+new_local_repository(
+    name = "linux_drogon",
+    build_file = "@//third_party/drogon:BUILD",
+    path="/usr"
+)

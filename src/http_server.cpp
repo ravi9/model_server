@@ -36,6 +36,9 @@
 #include "http_rest_api_handler.hpp"
 #include "status.hpp"
 
+#include <drogon/drogon.h>
+using namespace drogon;
+
 namespace ovms {
 
 namespace net_http = tensorflow::serving::net_http;
@@ -272,4 +275,75 @@ std::unique_ptr<http_server> createAndStartHttpServer(const std::string& address
 
     return nullptr;
 }
+
+void createAndStartDrogonServer() {
+    // `registerHandler()` adds a handler to the desired path. The handler is
+    // responsible for generating a HTTP response upon an HTTP request being
+    // sent to Drogon
+
+    app().registerHandler(
+        "/",
+        [](const HttpRequestPtr &,
+           std::function<void(const HttpResponsePtr &)> &&callback) {
+            LOG_INFO << "Received request";
+            auto resp = HttpResponse::newHttpResponse();
+            resp->setBody("Hello, World!");
+            callback(resp);
+        },
+        {Get});
+
+        app().registerHandler(
+        "/stream",
+        [](const HttpRequestPtr &,
+           std::function<void(const HttpResponsePtr &)> &&callback) {
+            LOG_INFO << "Received request for server side event";
+            auto resp = drogon::HttpResponse::newAsyncStreamResponse(
+                [](drogon::ResponseStreamPtr stream) {
+                    std::thread([stream =
+                                     std::shared_ptr<drogon::ResponseStream>{
+                                         std::move(stream)}]() mutable {
+                        for (int i = 0; i < 100; i++) {
+                            std::cout << std::boolalpha << stream->send("data: [hello] \n\n")
+                                    << std::endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                        stream->close();
+                    }).detach();
+                });
+            resp->setContentTypeCodeAndCustomString(
+                ContentType::CT_NONE, "text/event-stream");
+            callback(resp);
+        });
+
+        app().registerHandler(
+        "/new_stream",
+        [](const HttpRequestPtr &req,
+           std::function<void(const HttpResponsePtr &)> &&callback) {
+            LOG_INFO << "Received request for server side event";
+            auto resp = drogon::HttpResponse::newAsyncStreamResponse(
+                [](drogon::ResponseStreamPtr stream) {
+                    //std::thread([stream =
+                    //                 std::shared_ptr<drogon::ResponseStream>{
+                    //                     std::move(stream)}]() mutable {
+                        for (int i = 0; i < 100; i++) {
+                            std::cout << std::boolalpha << stream->send("data: [hello] \n\n")
+                                    << std::endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                        stream->close();
+                    //}).detach();
+                });
+            resp->setContentTypeCodeAndCustomString(
+                ContentType::CT_NONE, "text/event-stream");
+            callback(resp);
+        });
+
+    LOG_INFO << "Server running on 0.0.0.0:11339";
+
+    std::thread serverThread([] () {
+        app().addListener("0.0.0.0", 11339).run();
+    });
+    serverThread.detach();
+}
+
 }  // namespace ovms
