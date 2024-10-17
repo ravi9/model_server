@@ -114,7 +114,8 @@ cc_shared_library(
         "@cpprest//:__subpackages__",
         "@boringssl//:__subpackages__",
         "@linux_opencv//:__subpackages__",
-        "@linux_drogon//:__subpackages__",
+        "@drogon//:__subpackages__",
+        "@jsoncpp//:__subpackages__",
     ] + select({
         "//:not_disable_mediapipe": [
             "@mediapipe//:__subpackages__",

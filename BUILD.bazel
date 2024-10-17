@@ -54,7 +54,8 @@ cc_library(
         "@linux_openvino//:openvino",
         "@linux_opencv//:opencv",
         "@com_github_jupp0r_prometheus_cpp//core",
-        "@linux_drogon//:drogon",
+        "@drogon//:drogon",
+        "@jsoncpp//:jsoncpp",
         ] + select({
             "//:not_disable_mediapipe": [
                 "@mediapipe//mediapipe/framework:calculator_framework",

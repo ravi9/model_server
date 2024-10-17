@@ -54,6 +54,15 @@ http_archive(
     build_file = "@//third_party/libevent:BUILD",
 )
 
+http_archive(
+    name = "jsoncpp",
+    sha256 = "f93b6dd7ce796b13d02c108bc9f79812245a82e577581c4c9aabe57075c90ea2",
+    strip_prefix = "jsoncpp-1.9.6",
+    urls = [
+        "https://github.com/open-source-parsers/jsoncpp/archive/1.9.6.tar.gz",
+    ],
+)
+
 # overriding tensorflow serving bazel dependency
 # alternative would be to use cmake build of grpc and flag
 # to use system ssl instead
@@ -322,6 +331,9 @@ aws_sdk_cpp()
 load("@//third_party/llm_engine:llm_engine.bzl", "llm_engine")
 llm_engine()
 
+load("@//third_party/drogon:drogon.bzl", "drogon_cpp")
+drogon_cpp()
+
 # Azure Storage SDK
 new_local_repository(
     name = "azure",
@@ -432,11 +444,4 @@ git_repository(
     name = "nlohmann_json",
     remote = "https://github.com/nlohmann/json/",
     tag = "v3.11.3",
-)
-
-# Drogon HTTP Server
-new_local_repository(
-    name = "linux_drogon",
-    build_file = "@//third_party/drogon:BUILD",
-    path="/usr"
 )

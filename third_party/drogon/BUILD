@@ -13,35 +13,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-package(
-    default_visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "jsoncpp",
-    srcs = glob([
-        "lib/x86_64-linux-gnu/libjsoncpp.so",
-    ]),
-    hdrs = glob([
-        "include/jsoncpp/json/*.*",
-    ]),
-    strip_include_prefix = "include/jsoncpp",
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "drogon",
-    srcs = glob([
-        "local/lib/libdrogon.a",
-        "local/lib/libtrantor.a",
-    ]),
-    hdrs = glob([
-        "local/include/drogon/*.*",
-        "local/include/trantor/*.*",
-    ]),
-    deps = [
-         "@linux_drogon//:jsoncpp",
-    ],
-    visibility = ["//visibility:public"],
-)
