@@ -341,7 +341,7 @@ void createAndStartDrogonServer(ovms::Server& ovmsServer, int workers) {
 
     std::thread serverThread([workers] () {
         app()
-            .setThreadNum(workers)
+            .setThreadNum(4)
             .setIdleConnectionTimeout(0)
             .addListener("0.0.0.0", 11339)
             .run();
