@@ -155,7 +155,12 @@ public:
                         return absl::CancelledError();
                     }
 
-                    ov::Tensor finalPromptIds = nodeResources->cbPipe->get_tokenizer().encode(finalPrompt).input_ids;
+                    ov::Tensor finalPromptIds;
+                    try {
+                        finalPromptIds = nodeResources->cbPipe->get_tokenizer().encode(finalPrompt).input_ids;
+                    } catch (...) {
+                        return absl::InvalidArgumentError("Exception when running tokenizer::encode()");
+                    }
                     this->apiHandler->setPromptTokensUsage(finalPromptIds.get_size());
                     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "{}", getPromptTokensString(finalPromptIds));
 
