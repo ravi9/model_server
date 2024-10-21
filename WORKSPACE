@@ -54,15 +54,6 @@ http_archive(
     build_file = "@//third_party/libevent:BUILD",
 )
 
-http_archive(
-    name = "jsoncpp",
-    sha256 = "f93b6dd7ce796b13d02c108bc9f79812245a82e577581c4c9aabe57075c90ea2",
-    strip_prefix = "jsoncpp-1.9.6",
-    urls = [
-        "https://github.com/open-source-parsers/jsoncpp/archive/1.9.6.tar.gz",
-    ],
-)
-
 # overriding tensorflow serving bazel dependency
 # alternative would be to use cmake build of grpc and flag
 # to use system ssl instead

@@ -43,6 +43,7 @@ cc_library(
         "@com_github_jarro2783_cxxopts//:cxxopts",
         "@aws-sdk-cpp//:aws-sdk-cpp",
         "@aws-sdk-cpp//:aws-sdk-cpp_cmake",
+        "@drogon//:drogon_cmake",
         "@azure//:storage",
         "@cpprest//:sdk",
         "@boost//:lib",
@@ -54,8 +55,6 @@ cc_library(
         "@linux_openvino//:openvino",
         "@linux_opencv//:opencv",
         "@com_github_jupp0r_prometheus_cpp//core",
-        "@drogon//:drogon",
-        "@jsoncpp//:jsoncpp",
         ] + select({
             "//:not_disable_mediapipe": [
                 "@mediapipe//mediapipe/framework:calculator_framework",

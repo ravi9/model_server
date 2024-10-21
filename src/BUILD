@@ -76,6 +76,7 @@ cc_shared_library(
         "@fmtlib//:__subpackages__",
         "@com_github_jarro2783_cxxopts//:__subpackages__",
         "@aws-sdk-cpp//:__subpackages__",
+        "@drogon//:__subpackages__",
         "@boost//:__subpackages__",
         "@com_github_googleapis_google_cloud_cpp//:__subpackages__",
         "@curl//:__subpackages__",
@@ -114,8 +115,7 @@ cc_shared_library(
         "@cpprest//:__subpackages__",
         "@boringssl//:__subpackages__",
         "@linux_opencv//:__subpackages__",
-        "@drogon//:__subpackages__",
-        "@jsoncpp//:__subpackages__",
+        #"@jsoncpp//:__subpackages__",
     ] + select({
         "//:not_disable_mediapipe": [
             "@mediapipe//:__subpackages__",
