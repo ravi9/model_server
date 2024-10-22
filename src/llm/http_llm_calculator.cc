@@ -55,6 +55,7 @@ class HttpLLMCalculator : public CalculatorBase {
     ov::genai::GenerationHandle generationHandle;
     std::shared_ptr<OpenAIChatCompletionsHandler> apiHandler;
     std::shared_ptr<ClientConnection> client;
+    int reqId = -1;
 
     // TODO: To be  moved to CB library
     std::shared_ptr<TextStreamer> streamer;
@@ -105,6 +106,10 @@ public:
         try {
             // First iteration of Process()
             if (!cc->Inputs().Tag(INPUT_TAG_NAME).IsEmpty()) {
+                static std::atomic<int> gReqId = 0;
+                RET_CHECK(this->reqId == -1);
+                reqId = gReqId++;
+                SPDLOG_INFO("REQUEST ID: {}", reqId);
                 OVMS_PROFILE_SCOPE("Deserialization of first request");
                 // Check if we did not receive the payload twice
                 RET_CHECK(this->apiHandler == nullptr);
@@ -177,6 +182,7 @@ public:
             RET_CHECK(this->apiHandler != nullptr);
             RET_CHECK(this->streamer != nullptr);
             RET_CHECK(this->client != nullptr);
+            RET_CHECK(this->reqId >= 0);
 
             // Unary scenario
             if (!this->apiHandler->isStream()) {
@@ -196,6 +202,7 @@ public:
                 cc->Outputs().Tag(OUTPUT_TAG_NAME).Add(new OutputDataType{std::move(response)}, timestamp);
             } else {
                 OVMS_PROFILE_SCOPE("Stream generation cycle");
+                SPDLOG_INFO("Cycle for {}", this->reqId);
                 // Streaming scenario
                 // Each iteration is single execution of Process() method
 

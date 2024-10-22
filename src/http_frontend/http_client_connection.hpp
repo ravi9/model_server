@@ -28,17 +28,24 @@
 namespace ovms {
 
 class HttpClientConnection : public ClientConnection {
-    tensorflow::serving::net_http::ServerRequestInterface* serverReaderWriter;
+    tensorflow::serving::net_http::ServerRequestInterface* serverReaderWriter{nullptr};
 
 public:
-    HttpClientConnection(tensorflow::serving::net_http::ServerRequestInterface* serverReaderWriter) :
+    HttpClientConnection(tensorflow::serving::net_http::ServerRequestInterface* serverReaderWriter = nullptr) :
+        // TODO: Remove
         serverReaderWriter(serverReaderWriter) {}
 
     bool isDisconnected() const override {
+        if (!serverReaderWriter) {
+            return false;
+        }
         return this->serverReaderWriter->IsDisconnected();
     }
 
     void registerDisconnectionCallback(std::function<void()> fn) override {
+        if (!serverReaderWriter) {
+            return;
+        }
         serverReaderWriter->RegisterDisconnectionCallback(std::move(fn));
     }
 };

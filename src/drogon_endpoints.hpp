@@ -14,24 +14,16 @@
 // limitations under the License.
 //*****************************************************************************
 #pragma once
+#include <functional>
 
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
+#include <drogon/drogon.h>
 
-#include <rapidjson/document.h>
-
-#include "client_connection.hpp"
+#include "status.hpp"
 
 namespace ovms {
 
-struct HttpPayload {
-    std::string uri;
-    std::vector<std::pair<std::string, std::string>> headers;
-    std::string body;                                 // always
-    std::shared_ptr<rapidjson::Document> parsedJson;  // pre-parsed body             = null
-    std::shared_ptr<ClientConnection> client;
-};
+class ModelManager;
+
+Status processDrogonV3(ModelManager* mm, const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& callback);
 
 }  // namespace ovms

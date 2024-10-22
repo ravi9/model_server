@@ -15,6 +15,7 @@
 //*****************************************************************************
 #include "http_server.hpp"
 
+#include <functional>
 #include <memory>
 #include <regex>
 #include <string>
@@ -33,8 +34,15 @@
 #include "tensorflow_serving/util/threadpool_executor.h"
 #pragma GCC diagnostic pop
 
+#include <drogon/drogon.h>
+
+#include "drogon_endpoints.hpp"
 #include "http_rest_api_handler.hpp"
+#include "module_names.hpp"
+#include "servablemanagermodule.hpp"
+#include "server.hpp"
 #include "status.hpp"
+using namespace drogon;
 
 namespace ovms {
 
@@ -247,6 +255,7 @@ std::unique_ptr<http_server> createAndStartHttpServer(const std::string& address
     auto options = std::make_unique<net_http::ServerOptions>();
     options->AddPort(static_cast<uint32_t>(port));
     options->SetAddress(address);
+    num_threads = 1;  // save resources for drogon
     options->SetExecutor(std::make_unique<RequestExecutor>(num_threads));
 
     auto server = net_http::CreateEvHTTPServer(std::move(options));
@@ -272,4 +281,72 @@ std::unique_ptr<http_server> createAndStartHttpServer(const std::string& address
 
     return nullptr;
 }
+
+void createAndStartDrogonServer(ovms::Server& ovmsServer, int workers) {
+    // `registerHandler()` adds a handler to the desired path. The handler is
+    // responsible for generating a HTTP response upon an HTTP request being
+    // sent to Drogon
+
+    app().registerHandler(
+        "/",
+        [](const HttpRequestPtr&,
+            std::function<void(const HttpResponsePtr&)>&& callback) {
+            LOG_INFO << "Received request";
+            auto resp = HttpResponse::newHttpResponse();
+            resp->setBody("Hello, World!");
+            callback(resp);
+        },
+        {Get});
+
+    app().registerHandler(
+        "/stream",
+        [](const HttpRequestPtr&,
+            std::function<void(const HttpResponsePtr&)>&& callback) {
+            LOG_INFO << "Received request for server side event";
+            auto resp = drogon::HttpResponse::newAsyncStreamResponse(
+                [](drogon::ResponseStreamPtr stream) {
+                    std::thread([stream =
+                                        std::shared_ptr<drogon::ResponseStream>{
+                                            std::move(stream)}]() mutable {
+                        for (int i = 0; i < 100; i++) {
+                            std::cout << std::boolalpha << stream->send("data: [hello] \n\n")
+                                      << std::endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                        stream->close();
+                    })
+                        .detach();
+                });
+            resp->setContentTypeCodeAndCustomString(
+                ContentType::CT_NONE, "text/event-stream");
+            callback(resp);
+        });
+
+    ovms::ModelManager* mm = &(dynamic_cast<const ServableManagerModule*>(ovmsServer.getModule(SERVABLE_MANAGER_MODULE_NAME))->getServableManager());
+    app().registerHandler(
+        "/v3/completions",
+        [mm](const drogon::HttpRequestPtr& req,
+            std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+            processDrogonV3(mm, req, std::move(callback));  // Call your handler directly
+        });
+
+    app().registerHandler(
+        "/v3/chat/completions",
+        [mm](const drogon::HttpRequestPtr& req,
+            std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+            processDrogonV3(mm, req, std::move(callback));  // Call your handler directly
+        });
+
+    LOG_INFO << "Server running on 0.0.0.0:11339";
+
+    std::thread serverThread([workers]() {
+        app()
+            .setThreadNum(workers)
+            .setIdleConnectionTimeout(0)
+            .addListener("0.0.0.0", 11339)
+            .run();
+    });
+    serverThread.detach();
+}
+
 }  // namespace ovms
