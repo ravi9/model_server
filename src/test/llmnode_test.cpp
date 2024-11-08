@@ -1550,6 +1550,38 @@ TEST_F(LLMFlowHttpTest, inferCompletionsStreamClientDisconnectedImmediately) {
     ASSERT_EQ(response, "");
 }
 
+TEST_F(LLMFlowHttpTest, inferChatCompletionsViaKFSApiError) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnarrowing"
+    std::string binaryData{0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F};
+#pragma GCC diagnostic pop
+    std::string tensor1 = "{\"name\":\"input\",\"shape\":[1,10],\"datatype\":\"FP32\",\"parameters\":{\"binary_data_size\":40}}";
+    //std::string tensor2 = "{\"name\":\"in2\",\"shape\":[1,10],\"datatype\":\"FP32\",\"parameters\":{\"binary_data_size\":40}}";
+
+    //std::string request_body = "{\"inputs\":[" + tensor1 + ", " + tensor2 + "]}";
+    std::string request_body = "{\"inputs\":[" + tensor1 + "]}";
+    int headerLength = request_body.length();
+
+    request_body += binaryData;
+    //request_body += binaryData;
+
+    const std::string endpoint = "/v2/models/llmDummyKFS/versions/1/infer";
+    std::vector<std::pair<std::string, std::string>> headers;
+    std::pair<std::string, std::string> binaryInputsHeader{"Inference-Header-Content-Length", std::to_string(headerLength)};
+    headers.emplace_back(binaryInputsHeader);
+
+    ovms::HttpRequestComponents comp;
+
+    ASSERT_EQ(handler->parseRequestComponents(comp, "POST", endpoint, headers), ovms::StatusCode::OK);
+
+    std::string response;
+    ovms::HttpResponseComponents responseComponents;
+    tensorflow::serving::net_http::ServerRequestInterface* writer{nullptr};  // unused here, used only in streaming
+    ASSERT_EQ(
+        handler->dispatchToProcessor(endpointChatCompletions, request_body, &response, comp, responseComponents, writer),
+        ovms::StatusCode::MEDIAPIPE_GRAPH_ADD_PACKET_INPUT_STREAM);
+}
+
 const std::string validRequestBodyWithParameter(const std::string& parameter, const std::string& value) {
     std::string requestBody = R"(
         {
