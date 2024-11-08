@@ -67,12 +67,6 @@ Check the [LLM calculator documentation](../../docs/llm/reference.md) to learn a
 ```bash
 docker run -d --rm -p 8000:8000 -v $(pwd)/models:/workspace:ro openvino/model_server:latest --rest_port 8000 --config_path /workspace/config.json
 ```
-In case you want to use GPU device to run the generation, add extra docker parameters `--device /dev/dri --group-add=$(stat -c "%g" /dev/dri/render* | head -n 1)` 
-to `docker run` command, use the image with GPU support and make sure you copy the graph.pbtxt tuned for GPU device. 
-They can be applied using the export command like below:
-`python demos/common/export_models/export_model.py text_generation --source_model meta-llama/Meta-Llama-3-8B-Instruct --weight-format int4 --target_device GPU --block_size 16 --cache_size 2 --config_file_path models/config.json --model_repository_path models`
-Make sure the export model quantization level and cache size fit to the GPU memory.
-
 Wait for the model to load. You can check the status with a simple command:
 ```bash
 curl http://localhost:8000/v1/config
@@ -93,6 +87,16 @@ curl http://localhost:8000/v1/config
     }
 }
 ```
+---
+In case you want to use GPU device to run the generation, add extra docker parameters `--device /dev/dri --group-add=$(stat -c "%g" /dev/dri/render* | head -n 1)` 
+to `docker run` command. Use the image with GPU support. 
+
+Model can be exported for GPU execution in a very similar way. Example of the export command parameters are presented below:
+```bash
+python demos/common/export_models/export_model.py text_generation --source_model meta-llama/Meta-Llama-3-8B-Instruct --weight-format int4 --target_device GPU --cache_size 2 --config_file_path models/config.json --model_repository_path models --overwrite_model
+```
+Make sure the export model quantization level and cache size fit to the GPU memory.
+
 
 ## Client code
 
@@ -273,7 +277,7 @@ P99 TPOT (ms):                           246.48
 
 The service deployed above can be used in RAG chain using `langchain` library with OpenAI endpoint as the LLM engine.
 
-Check the example in the [RAG notebook](https://github.com/openvinotoolkit/model_server/blob/main/demos/continuous_batching/rag/rag_demo.ipynb)
+Check the example in the [RAG notebook](https://github.com/openvinotoolkit/model_server/blob/main/demos/continuous_batching/rag/README.md)
 
 ## Scaling the Model Server
 
