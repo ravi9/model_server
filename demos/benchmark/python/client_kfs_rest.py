@@ -227,5 +227,10 @@ class KFS_Client_REST(BaseClient):
     def predict(self, request, timeout):
         #self.print_info(f"HAHA: {self.triton_http_client.is_server_ready()}")
         #return self.stub.ModelInfer(request, timeout=timeout)
-        return self.triton_http_client.infer(self.model_name, request)
+        res = self.triton_http_client.infer(self.model_name, request)
+        for r in request:
+            self.print_info("REQUEST", r._get_binary_data())
+        for output_name in self.outputs:
+            self.print_info("RESPONSE", np.array(res.get_output(output_name)['data']))
+        return res
 
