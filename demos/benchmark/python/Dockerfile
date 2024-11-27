@@ -31,6 +31,7 @@ COPY main.py /ovms_benchmark_client
 COPY client.py /ovms_benchmark_client
 COPY client_tfs.py /ovms_benchmark_client
 COPY client_kfs.py /ovms_benchmark_client
+COPY client_kfs_rest.py /ovms_benchmark_client
 COPY metrics.py /ovms_benchmark_client
 COPY db_exporter.py /ovms_benchmark_client
 COPY __init__.py /ovms_benchmark_client
