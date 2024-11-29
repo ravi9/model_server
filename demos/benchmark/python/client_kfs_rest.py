@@ -20,6 +20,7 @@ import sys
 import json
 from http import HTTPStatus
 import numpy as np
+import time
 
 import grpc
 import requests
@@ -203,6 +204,7 @@ class KFS_Client_REST(BaseClient):
                 infer_input = httpclient.InferInput(input_name, shape, self.inputs[input_name]["dtype"])
                 #ddd = np.full(shape, 7, dtype="float32")
                 ddd = np.random.rand(*shape).astype("float32")
+                #ddd = np.ones(shape, dtype="float32")
                 self.print_info("DATA XXX", ddd.shape)
                 infer_input.set_data_from_numpy(ddd)
                 inputs_array.append(infer_input)
@@ -226,15 +228,14 @@ class KFS_Client_REST(BaseClient):
 
     # override
     def predict(self, request, timeout):
-        #self.print_info(f"HAHA: {self.triton_http_client.is_server_ready()}")
-        #return self.stub.ModelInfer(request, timeout=timeout)
+        before = time.time()
         res = self.triton_http_client.infer(self.model_name, request)
+        after = time.time()
+        print(f"request took {after - before} seconds")
         for r in request:
             in_d = np.frombuffer(r._get_binary_data(), dtype=np.float32)
-            #self.print_info("REQUEST", np.frombuffer(r._get_binary_data(), dtype=np.float32))
         for output_name in self.outputs:
             out_d = np.array(res.get_output(output_name)['data'])
-            #self.print_info("RESPONSE", np.array(res.get_output(output_name)['data']))
         assert np.array_equal(in_d + 1, out_d), f"XAXAexpected: {in_d + 1} actual: {out_d}"  # Dummy adds 1 to all elements
         return res
 
