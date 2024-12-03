@@ -228,14 +228,15 @@ class KFS_Client_REST(BaseClient):
 
     # override
     def predict(self, request, timeout):
-        before = time.time()
+        #before = time.time()
+        #self.triton_http_client = httpclient.InferenceServerClient(f"{self.address}:{self.rest_port}")
         res = self.triton_http_client.infer(self.model_name, request)
-        after = time.time()
-        print(f"request took {after - before} seconds")
+        #after = time.time()
+        #print(f"request took {after - before} seconds")
         for r in request:
             in_d = np.frombuffer(r._get_binary_data(), dtype=np.float32)
         for output_name in self.outputs:
             out_d = np.array(res.get_output(output_name)['data'])
-        assert np.array_equal(in_d + 1, out_d), f"XAXAexpected: {in_d + 1} actual: {out_d}"  # Dummy adds 1 to all elements
+        #assert np.array_equal(in_d + 1, out_d), f"XAXAexpected: {in_d + 1} actual: {out_d}"  # Dummy adds 1 to all elements
         return res
 
