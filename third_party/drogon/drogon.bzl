@@ -47,7 +47,9 @@ cc_library(
         build_file = "@_drogon_cpp//:BUILD",
         init_submodules = True,
         recursive_init_submodules = True,
-        patch_cmds = ["find . -name '中文.txt' -delete"],
+        patches = ["@//third_party/drogon:ovms_drogon.patch"],
+        patch_args = ["-p1"],
+        patch_cmds = ["bash -c \"find . -name '中文.txt' -delete\""],
     )
 
 def _impl(repository_ctx):
@@ -87,10 +89,12 @@ cmake(
         "--",  # <- Pass remaining options to the native tool.
         # https://github.com/bazelbuild/rules_foreign_cc/issues/329
         # there is no elegant parallel compilation support
-        "VERBOSE=1",
+        #"VERBOSE=1",
         "-j 6",
     ],
     cache_entries = {{
+        "ZLIB_INCLUDE_DIR": "C:/b_tmp/tpoq5oxa/execroot/ovms/external/zlib",
+        "ZLIB_LIBRARY": "@zlib//:zlib",
         "JSONCPP_INCLUDE_DIR": "@jsoncpp//:jsoncpp",
         "BUILD_CTL": "OFF",
         "BUILD_EXAMPLES": "OFF",
@@ -99,7 +103,9 @@ cmake(
         "BUILD_YAML_CONFIG": "OFF",
         "CMAKE_INSTALL_LIBDIR": "lib",
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "CMAKE_CXX_FLAGS": " -s -D_GLIBCXX_USE_CXX11_ABI=1 -Wno-error=deprecated-declarations -Wuninitialized\"
+        "CMAKE_CXX_STANDARD": "17",
+        "CXX_FILESYSTEM_HAVE_FS": "1",
+        "CMAKE_CXX_FLAGS": " -s -D_GLIBCXX_USE_CXX11_ABI=1"
     }} | select({{
            "//conditions:default": dict(
                build_release
@@ -112,13 +118,13 @@ cmake(
         "HTTP_PROXY": "{http_proxy}",
         "HTTPS_PROXY": "{https_proxy}",
     }},
-    deps = ["@jsoncpp//:jsoncpp",],
+    deps = ["@jsoncpp//:jsoncpp", "@zlib//:zlib"],
     lib_source = ":all_srcs",
     out_lib_dir = "lib",
     # linking order
     out_static_libs = [
-            "libdrogon.a",
-            "libtrantor.a",
+            "drogon.lib",
+            "trantor.lib",
         ],
     tags = ["requires-network"],
     visibility = ["//visibility:public"],
