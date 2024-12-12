@@ -260,38 +260,38 @@ new_local_repository(
 
 #load("@//:ovms_python.bzl", "ovms_workspace_python")
 #ovms_workspace_python()
-#load("@//third_party/python:python_repo.bzl", "python_repository")
-#python_repository(name = "_python3-linux")
+load("@//third_party/python:python_repo.bzl", "python_repository")
+python_repository(name = "_python3-linux")
 #
-#load("@//third_party/python:python_repo_win.bzl", "python_repository")
-#python_repository(name = "_python3-windows")
+load("@//third_party/python:python_repo_win.bzl", "python_repository")
+python_repository(name = "_python3-windows")
 #
-#new_local_repository(
-#    name = "python3_linux",
-#    path = "/usr",
-#    build_file = "@_python3-linux//:BUILD"
-#)
-#
-#new_local_repository(
-#    name = "python3_windows",
-#    path = "C:\\opt\\",
-#    build_file = "@_python3-windows//:BUILD"
-#)
-#
-#http_archive(
-#  name = "pybind11_bazel",
-#  strip_prefix = "pybind11_bazel-b162c7c88a253e3f6b673df0c621aca27596ce6b",
-#  urls = ["https://github.com/pybind/pybind11_bazel/archive/b162c7c88a253e3f6b673df0c621aca27596ce6b.zip"],
-#)
-## We still require the pybind library.
-#http_archive(
-#  name = "pybind11",
-#  build_file = "@pybind11_bazel//:pybind11.BUILD",
-#  strip_prefix = "pybind11-2.11.1",
-#  urls = ["https://github.com/pybind/pybind11/archive/v2.11.1.tar.gz"],
-#)
-#load("@pybind11_bazel//:python_configure.bzl", "python_configure")
-#python_configure(name = "local_config_python")
+new_local_repository(
+    name = "python3_linux",
+    path = "/usr",
+    build_file = "@_python3-linux//:BUILD"
+)
+
+new_local_repository(
+    name = "python3_windows",
+    path = "C:\\opt\\",
+    build_file = "@_python3-windows//:BUILD"
+)
+
+http_archive(
+  name = "pybind11_bazel",
+  strip_prefix = "pybind11_bazel-b162c7c88a253e3f6b673df0c621aca27596ce6b",
+  urls = ["https://github.com/pybind/pybind11_bazel/archive/b162c7c88a253e3f6b673df0c621aca27596ce6b.zip"],
+)
+# We still require the pybind library.
+http_archive(
+  name = "pybind11",
+  build_file = "@pybind11_bazel//:pybind11.BUILD",
+  strip_prefix = "pybind11-2.11.1",
+  urls = ["https://github.com/pybind/pybind11/archive/v2.11.1.tar.gz"],
+)
+load("@pybind11_bazel//:python_configure.bzl", "python_configure")
+python_configure(name = "local_config_python")
 #
 #load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 #
