@@ -4,3 +4,27 @@ curl http://localhost:11338/v3/images/variations \
   -F image="@file.txt" \
   -F n=2 \
   -F size="1024x1024"
+
+
+
+curl http://localhost:11338/v3/stabilityai/StableDiffusionXL \
+  -H "Authorization: Bearer unknown" \
+  -F image="@file.txt" \
+  -F n=2 \
+  -F size="1024x1024"
+
+
+
+POST /endpoints/EndpointName/invocations HTTP/1.1
+Content-Type: ContentType
+Accept: Accept
+X-Amzn-SageMaker-Custom-Attributes: CustomAttributes
+X-Amzn-SageMaker-Target-Model: TargetModel
+X-Amzn-SageMaker-Target-Variant: TargetVariant
+X-Amzn-SageMaker-Target-Container-Hostname: TargetContainerHostname
+X-Amzn-SageMaker-Inference-Id: InferenceId
+X-Amzn-SageMaker-Enable-Explanations: EnableExplanations
+X-Amzn-SageMaker-Inference-Component: InferenceComponentName
+X-Amzn-SageMaker-Session-Id: SessionId
+
+Body

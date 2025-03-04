@@ -456,6 +456,7 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
     std::shared_ptr<MediapipeGraphExecutor> executor;
     bool streamFieldVal = false;
     bool isMultiPart = false;  // cannot be parsed with json parser
+    bool isCustom = false;
     {
         OVMS_PROFILE_SCOPE("rapidjson parse body");
         doc->Parse(request_body.c_str());
@@ -464,16 +465,18 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
         OVMS_PROFILE_SCOPE("rapidjson validate");
         if (doc->HasParseError()) {
             //return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body");
-            if (!serverReaderWriter->ParseMultiPart()) {
-                return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body and MultiPart body");
+            if (!serverReaderWriter->ParseMultiPart() || serverReaderWriter->GetMultiPartField("model").empty()) {
+                isCustom = true;
+                //return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body and MultiPart body");
+            } else {
+                isMultiPart = true;  // TODO: Check if multipart in some header?
             }
-            isMultiPart = true;  // TODO: Check if multipart in some header?
         }
 
         std::string model_name;
 
         // JSON
-        if (!isMultiPart) {
+        if (!isMultiPart && !isCustom) {
 
             if (!doc->IsObject()) {
                 return Status(StatusCode::JSON_INVALID, "JSON body must be an object");
@@ -500,10 +503,14 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
                     streamFieldVal = streamIt->value.GetBool();
                 }
             }
-        } else {
+        } else if (isMultiPart) {
             // MultiPart
             model_name = serverReaderWriter->GetMultiPartField("model");
             SPDLOG_INFO("Deduced model name from multipart: {}", model_name);
+        } else {
+            // Fully custom, deduce model name from URI
+            model_name = uri.size() >= 4 ? std::string(uri.substr(4)) : "";
+            SPDLOG_INFO("Deduced model name from URI: {}", model_name);
         }
 
         auto status = this->modelManager.createPipeline(executor, model_name);
