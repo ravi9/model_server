@@ -40,7 +40,7 @@ cc_library(
 
 cc_library(
     name = "llmcalculator",
-    srcs = ["http_llm_calculator.cc"],
+    srcs = ["http_llm_calculator.cc", "create_image_variation.cc"],
     deps = [
         "//third_party:openvino",
         "@mediapipe//mediapipe/framework:calculator_framework",

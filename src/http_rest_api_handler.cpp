@@ -455,6 +455,7 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
     std::shared_ptr<Document> doc = std::make_shared<Document>();
     std::shared_ptr<MediapipeGraphExecutor> executor;
     bool streamFieldVal = false;
+    bool isMultiPart = false;  // cannot be parsed with json parser
     {
         OVMS_PROFILE_SCOPE("rapidjson parse body");
         doc->Parse(request_body.c_str());
@@ -462,33 +463,47 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
     {
         OVMS_PROFILE_SCOPE("rapidjson validate");
         if (doc->HasParseError()) {
-            return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body");
-        }
-
-        if (!doc->IsObject()) {
-            return Status(StatusCode::JSON_INVALID, "JSON body must be an object");
-        }
-
-        auto modelNameIt = doc->FindMember("model");
-        if (modelNameIt == doc->MemberEnd()) {
-            return Status(StatusCode::JSON_INVALID, "model field is missing in JSON body");
-        }
-
-        if (!modelNameIt->value.IsString()) {
-            return Status(StatusCode::JSON_INVALID, "model field is not a string");
-        }
-
-        const std::string model_name = modelNameIt->value.GetString();
-
-        bool isTextGenerationEndpoint = uri.find("completions") != std::string_view::npos;
-        if (isTextGenerationEndpoint) {
-            auto streamIt = doc->FindMember("stream");
-            if (streamIt != doc->MemberEnd()) {
-                if (!streamIt->value.IsBool()) {
-                    return Status(StatusCode::JSON_INVALID, "stream field is not a boolean");
-                }
-                streamFieldVal = streamIt->value.GetBool();
+            //return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body");
+            if (!serverReaderWriter->ParseMultiPart()) {
+                return Status(StatusCode::JSON_INVALID, "Cannot parse JSON body and MultiPart body");
             }
+            isMultiPart = true;  // TODO: Check if multipart in some header?
+        }
+
+        std::string model_name;
+
+        // JSON
+        if (!isMultiPart) {
+
+            if (!doc->IsObject()) {
+                return Status(StatusCode::JSON_INVALID, "JSON body must be an object");
+            }
+
+            auto modelNameIt = doc->FindMember("model");
+            if (modelNameIt == doc->MemberEnd()) {
+                return Status(StatusCode::JSON_INVALID, "model field is missing in JSON body");
+            }
+
+            if (!modelNameIt->value.IsString()) {
+                return Status(StatusCode::JSON_INVALID, "model field is not a string");
+            }
+
+            model_name = modelNameIt->value.GetString();
+
+            bool isTextGenerationEndpoint = uri.find("completions") != std::string_view::npos;
+            if (isTextGenerationEndpoint) {
+                auto streamIt = doc->FindMember("stream");
+                if (streamIt != doc->MemberEnd()) {
+                    if (!streamIt->value.IsBool()) {
+                        return Status(StatusCode::JSON_INVALID, "stream field is not a boolean");
+                    }
+                    streamFieldVal = streamIt->value.GetBool();
+                }
+            }
+        } else {
+            // MultiPart
+            model_name = serverReaderWriter->GetMultiPartField("model");
+            SPDLOG_INFO("Deduced model name from multipart: {}", model_name);
         }
 
         auto status = this->modelManager.createPipeline(executor, model_name);
@@ -501,6 +516,7 @@ Status HttpRestApiHandler::processV3(const std::string_view uri, const HttpReque
         request.parsedJson = std::move(doc);
         request.uri = std::string(uri);
         request.client = std::make_shared<HttpClientConnection>(serverReaderWriter);
+        // TODO: Parser
     }
     if (streamFieldVal == false) {
         ExecutionContext executionContext{ExecutionContext::Interface::REST, ExecutionContext::Method::V3Unary};

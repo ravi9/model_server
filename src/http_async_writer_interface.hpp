@@ -36,6 +36,9 @@ public:
     // Used by calculator via HttpClientConnection
     virtual bool IsDisconnected() const = 0;
     virtual void RegisterDisconnectionCallback(std::function<void()> callback) = 0;
+
+    virtual bool ParseMultiPart() = 0;
+    virtual std::string GetMultiPartField(const std::string& fieldName) const = 0;
 };
 
 }  // namespace ovms

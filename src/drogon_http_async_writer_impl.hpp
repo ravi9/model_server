@@ -16,6 +16,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #pragma warning(push)
@@ -35,6 +36,7 @@ class DrogonHttpAsyncWriterImpl : public HttpAsyncWriter {
     bool isDisconnected = false;
     std::unordered_map<std::string, std::string> additionalHeaders;
     const drogon::HttpRequestPtr requestPtr{nullptr};
+    std::shared_ptr<drogon::MultiPartParser> multiPartParser{nullptr};
 
 public:
     DrogonHttpAsyncWriterImpl(
@@ -57,6 +59,9 @@ public:
     // Used by calculator via HttpClientConnection
     bool IsDisconnected() const override;
     void RegisterDisconnectionCallback(std::function<void()> callback) override;
+
+    bool ParseMultiPart() override;
+    std::string GetMultiPartField(const std::string& fieldName) const override;
 };
 
 }  // namespace ovms

@@ -55,6 +55,8 @@ Status DrogonHttpServer::startAcceptingRequests() {
     // OVMS has its own sigterm handling
     drogon::app().disableSigtermHandling();
 
+    //drogon::app().setUploadPath("/tmp/uploads");  // TODO: What about windows?
+
     drogon::app().setDefaultHandler([this](const drogon::HttpRequestPtr& req, std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
         // No separate pool for unary requests, they are handled by drogon's listener threads
         try {

@@ -84,4 +84,14 @@ void DrogonHttpAsyncWriterImpl::RegisterDisconnectionCallback(std::function<void
     }
 }
 
+bool DrogonHttpAsyncWriterImpl::ParseMultiPart() {
+    multiPartParser = std::make_shared<drogon::MultiPartParser>();
+    return multiPartParser->parse(requestPtr) == 0;
+}
+
+std::string DrogonHttpAsyncWriterImpl::GetMultiPartField(const std::string& fieldName) const {
+    // might be uninitialized?
+    return multiPartParser->getParameter<std::string>(fieldName);
+}
+
 }  // namespace ovms

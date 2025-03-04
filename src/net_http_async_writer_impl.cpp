@@ -49,4 +49,19 @@ void NetHttpAsyncWriterImpl::RegisterDisconnectionCallback(std::function<void()>
     this->req->RegisterDisconnectionCallback(std::move(callback));
 }
 
+/*
+    virtual bool ParseMultiPart() const = 0;
+    virtual std::string GetMultiPartField(const std::string& fieldName) const = 0;
+*/
+
+bool NetHttpAsyncWriterImpl::ParseMultiPart() {
+    // Not implemented
+    return false;
+}
+
+std::string NetHttpAsyncWriterImpl::GetMultiPartField(const std::string& fieldName) const {
+    // Not implemented
+    return "";
+}
+
 }  // namespace ovms

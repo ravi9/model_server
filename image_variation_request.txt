@@ -1,0 +1,6 @@
+curl http://localhost:11338/v3/images/variations \
+  -H "Authorization: Bearer unknown" \
+  -F model="stabilityai/StableDiffusionXL" \
+  -F image="@file.txt" \
+  -F n=2 \
+  -F size="1024x1024"

@@ -197,6 +197,15 @@ std::unique_ptr<DrogonHttpServer> createAndStartDrogonHttpServer(const std::stri
             headers.emplace_back(header.first, header.second);
         }
 
+        drogon::MultiPartParser fileParser;
+        fileParser.parse(req);
+        SPDLOG_INFO("REST request FILE SIZE {}", fileParser.getFiles().size());
+        if (!fileParser.getFiles().empty()) {
+            SPDLOG_INFO("{} [{}]", fileParser.getFiles()[0].fileLength(), std::string(fileParser.getFiles()[0].fileData(), fileParser.getFiles()[0].fileLength()));
+        }
+
+        SPDLOG_INFO("Request BODY: [{}]", req->getBody());
+
         SPDLOG_DEBUG("Processing HTTP request: {} {} body: {} bytes",
             req->getMethodString(),
             req->getOriginalPath(),
