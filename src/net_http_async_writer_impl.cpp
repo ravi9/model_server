@@ -64,4 +64,12 @@ std::string NetHttpAsyncWriterImpl::GetMultiPartField(const std::string& fieldNa
     return "";
 }
 
+size_t NetHttpAsyncWriterImpl::GetNumberOfFiles() const {
+    return 0;
+}
+
+std::string_view NetHttpAsyncWriterImpl::GetFileContent(size_t index) const {
+    return std::string_view{""};
+}
+
 }  // namespace ovms

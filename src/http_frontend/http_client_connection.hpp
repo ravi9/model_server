@@ -37,6 +37,18 @@ public:
     void registerDisconnectionCallback(std::function<void()> fn) override {
         serverReaderWriter->RegisterDisconnectionCallback(std::move(fn));
     }
+
+    std::string getMultiPartField(const std::string& fieldName) const override {
+        return serverReaderWriter->GetMultiPartField(fieldName);
+    }
+
+    size_t getNumberOfFiles() const override {
+        return serverReaderWriter->GetNumberOfFiles();
+    }
+
+    std::string_view getFileContent(size_t index) const override {
+        return serverReaderWriter->GetFileContent(index);
+    }
 };
 
 }  // namespace ovms

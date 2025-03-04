@@ -17,6 +17,7 @@
 
 #include <functional>
 #include <string>
+#include <string_view>
 
 #include "http_status_code.hpp"
 
@@ -39,6 +40,9 @@ public:
 
     virtual bool ParseMultiPart() = 0;
     virtual std::string GetMultiPartField(const std::string& fieldName) const = 0;
+
+    virtual size_t GetNumberOfFiles() const = 0;
+    virtual std::string_view GetFileContent(size_t index) const = 0;
 };
 
 }  // namespace ovms

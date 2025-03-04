@@ -56,6 +56,9 @@ public:
 
     bool ParseMultiPart() override;
     std::string GetMultiPartField(const std::string& fieldName) const override;
+
+    size_t GetNumberOfFiles() const override;
+    std::string_view GetFileContent(size_t index) const override;
 };
 
 }  // namespace ovms

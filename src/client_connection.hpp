@@ -15,6 +15,8 @@
 #pragma once
 
 #include <functional>
+#include <string>
+#include <string_view>
 
 namespace ovms {
 
@@ -22,6 +24,11 @@ class ClientConnection {
 public:
     virtual bool isDisconnected() const = 0;
     virtual void registerDisconnectionCallback(std::function<void()> fn) = 0;
+
+    virtual std::string getMultiPartField(const std::string& fieldName) const = 0;
+
+    virtual size_t getNumberOfFiles() const = 0;
+    virtual std::string_view getFileContent(size_t index) const = 0;
 };
 
 }  // namespace ovms

@@ -70,8 +70,19 @@ public:
             return absl::OkStatus();
         }
 
+        if (!cc->Inputs().Tag(INPUT_TAG_NAME).IsEmpty()) {
+            // get payload
+            const auto& payload = cc->Inputs().Tag(INPUT_TAG_NAME).Get<ovms::HttpPayload>();
+            SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Process payload: {}", cc->NodeName(), payload.body);
+
+            // read all files
+            SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Number of files: {}", payload.client->getNumberOfFiles());
+            SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "File content: [{}]", payload.client->getFileContent(0));
+            SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Param size: [{}]", payload.client->getMultiPartField("size"));
+        }
+
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Process end", cc->NodeName());
-        return absl::OkStatus();
+        return absl::CancelledError();
     }
 };
 

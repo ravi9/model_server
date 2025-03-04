@@ -94,4 +94,12 @@ std::string DrogonHttpAsyncWriterImpl::GetMultiPartField(const std::string& fiel
     return multiPartParser->getParameter<std::string>(fieldName);
 }
 
+size_t DrogonHttpAsyncWriterImpl::GetNumberOfFiles() const {
+    return multiPartParser->getFiles().size();
+}
+
+std::string_view DrogonHttpAsyncWriterImpl::GetFileContent(size_t index) const {
+    return multiPartParser->getFiles()[index].fileContent();
+}
+
 }  // namespace ovms
