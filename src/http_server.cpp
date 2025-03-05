@@ -198,7 +198,7 @@ std::unique_ptr<DrogonHttpServer> createAndStartDrogonHttpServer(const std::stri
         }
 
         drogon::MultiPartParser fileParser;
-        fileParser.parse(req);
+        fileParser.parse(req);  // -1 ? 0
         SPDLOG_INFO("REST request FILE SIZE {}", fileParser.getFiles().size());
         if (!fileParser.getFiles().empty()) {
             SPDLOG_INFO("{} [{}]", fileParser.getFiles()[0].fileLength(), std::string(fileParser.getFiles()[0].fileData(), fileParser.getFiles()[0].fileLength()));

@@ -35,16 +35,16 @@ namespace mediapipe {
 class CreateImageVariationCalculator : public CalculatorBase {
     static const std::string INPUT_TAG_NAME;
     static const std::string OUTPUT_TAG_NAME;
-    static const std::string LOOPBACK_TAG_NAME;
+    //static const std::string LOOPBACK_TAG_NAME;
 
 public:
     static absl::Status GetContract(CalculatorContract* cc) {
         RET_CHECK(!cc->Inputs().GetTags().empty());
         RET_CHECK(!cc->Outputs().GetTags().empty());
         cc->Inputs().Tag(INPUT_TAG_NAME).Set<ovms::HttpPayload>();
-        cc->Inputs().Tag(LOOPBACK_TAG_NAME).Set<bool>();
+        //cc->Inputs().Tag(LOOPBACK_TAG_NAME).Set<bool>();
         cc->Outputs().Tag(OUTPUT_TAG_NAME).Set<std::string>();
-        cc->Outputs().Tag(LOOPBACK_TAG_NAME).Set<bool>();
+        //cc->Outputs().Tag(LOOPBACK_TAG_NAME).Set<bool>();
         return absl::OkStatus();
     }
 
@@ -65,11 +65,6 @@ public:
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Process start", cc->NodeName());
         OVMS_PROFILE_FUNCTION();
 
-        // For cases where MediaPipe decides to trigger Process() when there are no inputs
-        if (cc->Inputs().Tag(INPUT_TAG_NAME).IsEmpty() && cc->Inputs().Tag(LOOPBACK_TAG_NAME).IsEmpty()) {
-            return absl::OkStatus();
-        }
-
         if (!cc->Inputs().Tag(INPUT_TAG_NAME).IsEmpty()) {
             // get payload
             const auto& payload = cc->Inputs().Tag(INPUT_TAG_NAME).Get<ovms::HttpPayload>();
@@ -79,16 +74,24 @@ public:
             SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Number of files: {}", payload.client->getNumberOfFiles());
             SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "File content: [{}]", payload.client->getFileContent(0));
             SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Param size: [{}]", payload.client->getMultiPartField("size"));
+
+            cc->Outputs().Tag(OUTPUT_TAG_NAME).Add(new std::string{R"(
+                {
+                    "status": "ok",
+                    "message": "Image variation created"
+                }
+                
+                )"}, cc->InputTimestamp());
         }
 
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "LLMCalculator  [Node: {}] Process end", cc->NodeName());
-        return absl::CancelledError();
+        return absl::OkStatus();
     }
 };
 
 const std::string CreateImageVariationCalculator::INPUT_TAG_NAME{"HTTP_REQUEST_PAYLOAD"};
 const std::string CreateImageVariationCalculator::OUTPUT_TAG_NAME{"HTTP_RESPONSE_PAYLOAD"};
-const std::string CreateImageVariationCalculator::LOOPBACK_TAG_NAME{"LOOPBACK"};
+//const std::string CreateImageVariationCalculator::LOOPBACK_TAG_NAME{"LOOPBACK"};
 
 REGISTER_CALCULATOR(CreateImageVariationCalculator);
 

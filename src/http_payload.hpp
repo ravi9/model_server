@@ -33,6 +33,7 @@ struct HttpPayload {
     std::vector<std::pair<std::string, std::string>> headers;
     std::string body;                                 // always
     std::shared_ptr<rapidjson::Document> parsedJson;  // pre-parsed body             = null
+    // shared_ptr<MultiPartParser>
     std::shared_ptr<ClientConnection> client;
 };
 

@@ -1,7 +1,7 @@
 curl http://localhost:11338/v3/images/variations \
   -H "Authorization: Bearer unknown" \
   -F model="stabilityai/StableDiffusionXL" \
-  -F image="@file.txt" \
+  -F image="@./demos/common/static/images/peacock.jpeg" \
   -F n=2 \
   -F size="1024x1024"
 
