@@ -2644,7 +2644,7 @@ cc_binary(
 )
 
 cc_test(
-    name = "ovms_test",
+    name = "ovms_legacy_test",
     linkstatic = 1,
     srcs = [
         "test/c_api_stress_tests.cpp",
@@ -2696,7 +2696,7 @@ cc_test(
         "test/sequence_manager_test.cpp",
         "test/sequence_test.cpp",
         "test/serialization_tests.cpp",
-        #"test/server_test.cpp",
+        "test/server_test.cpp",
         "test/shape_test.cpp",
         "test/stateful_config_test.cpp",
         #"test/stateful_modelinstance_test.cpp", # TODO remove?
@@ -3090,6 +3090,15 @@ cc_library(
     copts = COPTS_TESTS,
     linkopts = [],
 )
+
+test_suite(
+    name = "ovms_all_unit_tests",
+    tests = [
+        "//src:ovms_server_test_hp",
+        "//src:ovms_legacy_test",
+    ],
+)
+
 filegroup(
   name = "static_analysis",
   srcs = [
