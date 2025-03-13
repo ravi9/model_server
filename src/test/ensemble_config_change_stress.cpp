@@ -182,11 +182,11 @@ TEST_F(StressPipelineConfigChanges, KFSAddNewVersionDuringPredictLoad) {
         allowedLoadResults);
 }
 // Disabled because we cannot start http server multiple times https://github.com/drogonframework/drogon/issues/2210
-#if (USE_DROGON == 0)
-TEST_F(ConfigChangeStressTest, GetMetricsDuringLoad) {
-#else
-TEST_F(ConfigChangeStressTest, DISABLED_GetMetricsDuringLoad) {
-#endif
+//#if (USE_DROGON == 0)
+//TEST_F(ConfigChangeStressTest, GetMetricsDuringLoad) {
+//#else
+TEST_F(ConfigChangeStressTest, _Standalone_GetMetricsDuringLoad) {
+//#endif
     bool performWholeConfigReload = false;                        // we just need to have all model versions rechecked
     std::set<StatusCode> requiredLoadResults = {StatusCode::OK};  // we expect full continuity of operation
     std::set<StatusCode> allowedLoadResults = {};

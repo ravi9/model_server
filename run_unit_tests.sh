@@ -23,7 +23,7 @@ CHECK_COVERAGE=${CHECK_COVERAGE:-"0"}
 TEST_LOG=${TEST_LOG:-"test.log"}
 FAIL_LOG=${FAIL_LOG:-"fail.log"}
 if [ -f /etc/redhat-release ] ; then dist="--//:distro=redhat" ; fi
-debug_bazel_flags=${debug_bazel_flags:-"--config=mp_on_py_on $dist"}
+debug_bazel_flags=${debug_bazel_flags:-"--config=mp_on_py_on --strip=always $dist"}
 TEST_FILTER="--test_filter=*"
 SHARED_OPTIONS=" \
 --jobs=$JOBS \
@@ -69,10 +69,10 @@ if [ "$RUN_TESTS" == "1" ] ; then
     bazel build --jobs=$JOBS ${debug_bazel_flags} //src:ovms_test || exit 1
     echo "Executing unit tests"
     failed=0
-    if [[ "$(python3 --version)" =~ "Python 3.12" ]] ; then
+    if [[ "$(python3 --version)" =~ "Python 3.10" ]] ; then
         set +x
         # Tests starting python interpreter should be executed separately for Python 3.12 due to issues with multiple reinitialization of the interpreter
-        for i in `./bazel-bin/src/ovms_test --gtest_list_tests --gtest_filter="-LLMChatTemplateTest.*:LLMOptionsHttpTest.*" | grep -vE '^ ' | cut -d. -f1` ; do
+        for i in `./bazel-bin/src/ovms_test --gtest_list_tests --gtest_filter="-LLMChatTemplateTest.*:LLMOptionsHttpTest.*:.*_Standalone_.*" | grep -vE '^ ' | cut -d. -f1` ; do
             if bazel test --jobs=$JOBS ${debug_bazel_flags} --test_summary=detailed --test_output=all --test_filter="$i.*" //src:ovms_test > tmp.log 2>&1 ; then
                 echo -n .
             else
@@ -82,7 +82,7 @@ if [ "$RUN_TESTS" == "1" ] ; then
             fi
             cat tmp.log >> ${TEST_LOG}
         done
-        for i in `./bazel-bin/src/ovms_test --gtest_list_tests --gtest_filter="LLMChatTemplateTest.*:LLMOptionsHttpTest.*" | grep '^  '` ; do
+        for i in `./bazel-bin/src/ovms_test --gtest_list_tests --gtest_filter="LLMChatTemplateTest.*:LLMOptionsHttpTest.*:.*_Standalone_" | grep '^  '` ; do
             if bazel test --jobs=$JOBS ${debug_bazel_flags} --test_summary=detailed --test_output=all --test_filter="*.$i" //src:ovms_test > tmp.log 2>&1 ; then
                 echo -n .
             else
