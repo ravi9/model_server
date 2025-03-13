@@ -2696,7 +2696,7 @@ cc_test(
         "test/sequence_manager_test.cpp",
         "test/sequence_test.cpp",
         "test/serialization_tests.cpp",
-        "test/server_test.cpp",
+        #"test/server_test.cpp",
         "test/shape_test.cpp",
         "test/stateful_config_test.cpp",
         #"test/stateful_modelinstance_test.cpp", # TODO remove?
@@ -2904,6 +2904,26 @@ cc_test(
     copts = COPTS_TESTS,
 )
 
+cc_test(
+    name = "ovms_server_test_hp",
+    linkstatic = 1,
+    srcs = [
+            "test/server_test_hp.cpp",
+        ],
+    data = [
+      
+    ],
+    linkopts = LINKOPTS_ADJUSTED,
+    deps = [
+            "//src:ovms_lib",
+            "@cpp_httplib//:cpp_httplib", # server_test.cpp
+            ":test_utils",
+            "@com_google_googletest//:gtest",
+            "@com_google_googletest//:gtest_main",
+    ],
+    copts = COPTS_TESTS,
+)
+
 cc_library(
     name = "test_utils",
     linkstatic = 1,
@@ -2911,6 +2931,7 @@ cc_library(
         "test/c_api_test_utils.hpp",
         "test/test_utils.hpp",
         "test/stress_test_utils.hpp",
+        "test/mockmodelinstancechangingstates.hpp"
         ],
     srcs = [
         "test/c_api_test_utils.cpp",

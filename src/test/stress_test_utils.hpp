@@ -1140,7 +1140,7 @@ public:
             std::tuple<ovms::signed_shape_t, ovms::Precision>{{1, DUMMY_MODEL_INPUT_SIZE}, ovms::Precision::FP32}}};
     }
     // we setup the OVMS so that it does not have any models loaded but also prepare the fixture to have ovmsConfig & configFilePath set up
-    void SetUpCAPIServerInstance(const std::string& initialConfigContent, bool startHttpServer) {
+    void SetUpCAPIServerInstance(const std::string& initialConfigContent) {
         TestWithTempDir::SetUp();
         std::string port = "9178";
         std::string restPort = "9178";

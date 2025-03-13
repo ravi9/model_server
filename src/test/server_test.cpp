@@ -20,7 +20,6 @@
 #include <gmock/gmock.h>
 #include <grpcpp/create_channel.h>
 #include <gtest/gtest.h>
-#include <httplib.h>
 
 #include "../cleaner_utils.hpp"
 #include "../dags/node_library.hpp"
@@ -146,45 +145,6 @@ static void checkServerMetadata(const char* grpcPort, grpc::StatusCode status = 
     SPDLOG_INFO("Verifying if server responds with correct metadata on address: {}", address);
     ServingClient client(grpc::CreateCustomChannel(address, grpc::InsecureChannelCredentials(), args));
     client.verifyServerMetadata(status);
-}
-
-static void requestRestServerAlive(const char* httpPort, httplib::StatusCode status = httplib::StatusCode::OK_200, bool expectedStatus = true) {
-    std::unique_ptr<httplib::Client> cli{nullptr};
-    try {
-        cli = std::make_unique<httplib::Client>(std::string("http://localhost:") + httpPort);
-    } catch (std::exception& e) {
-        SPDLOG_ERROR("Exception caught during rest request:{}", e.what());
-        EXPECT_TRUE(false);
-        return;
-    } catch (...) {
-        SPDLOG_ERROR("Exception caught during rest request");
-        EXPECT_TRUE(false);
-        return;
-    }
-    try {
-        auto res = cli->Get("/v2/health/live");
-        if (!res) {
-            SPDLOG_ERROR("Got error:{}", httplib::to_string(res.error()));
-            EXPECT_TRUE(!expectedStatus);
-            return;
-        } else {
-            EXPECT_TRUE(expectedStatus);
-        }
-        if (res->status != httplib::StatusCode::OK_200) {
-            SPDLOG_ERROR("Failed to get liveness status code: {}, status: {}", res->status, httplib::status_message(res->status));
-            EXPECT_TRUE(false);
-            return;
-        }
-    } catch (std::exception& e) {
-        SPDLOG_ERROR("Exception caught during rest request:{}", e.what());
-        EXPECT_TRUE(false);
-        return;
-    } catch (...) {
-        SPDLOG_ERROR("Exception caught during rest request");
-        EXPECT_TRUE(false);
-        return;
-    }
-    return;
 }
 
 TEST(Server, ServerNotAliveBeforeStart) {
@@ -434,40 +394,4 @@ TEST(Server, CAPIAliveGrpcNotHttpNot) {
     // GRPC is initialized before Servable ManagerModule
     requestServerAlive(portOldDefault.c_str(), grpc::StatusCode::UNAVAILABLE, false);
     requestRestServerAlive(typicalRestDefault.c_str(), httplib::StatusCode::NotFound_404, false);
-}
-TEST(Server, _Standalone_CAPIAliveGrpcNotHttpYes) {
-    //GTEST_SKIP() << "Until we have a way to launch all tests restarting drogon";  // TODO @dkalinow to enable drogon tests
-    std::string port = "9000";
-    randomizePort(port);
-    char* argv[] = {
-        (char*)"OpenVINO Model Server",
-        (char*)"--model_name",
-        (char*)"dummy",
-        (char*)"--rest_port",
-        (char*)port.c_str(),
-        (char*)"--model_path",
-        (char*)getGenericFullPathForSrcTest("/ovms/src/test/dummy").c_str(),
-        nullptr};
-
-    ovms::Server& server = ovms::Server::instance();
-    bool isLive = true;
-    auto* cserver = reinterpret_cast<OVMS_Server*>(&server);
-    OVMS_ServerLive(cserver, &isLive);
-    ASSERT_TRUE(!isLive);
-    std::thread t([&argv, &server]() {
-        ASSERT_EQ(EXIT_SUCCESS, server.start(7, argv));
-    });
-    auto start = std::chrono::high_resolution_clock::now();
-    while ((ovms::Server::instance().getModuleState(SERVABLE_MANAGER_MODULE_NAME) != ovms::ModuleState::INITIALIZED) &&
-           (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - start).count() < 5)) {
-    }
-    isLive = false;
-    OVMS_ServerLive(cserver, &isLive);
-    ASSERT_TRUE(isLive);
-    // GrPC is initialized before Servable ManagerModule
-    requestServerAlive(portOldDefault.c_str(), grpc::StatusCode::UNAVAILABLE, false);
-    requestRestServerAlive(port.c_str());
-    server.setShutdownRequest(1);
-    t.join();
-    server.setShutdownRequest(0);
 }
