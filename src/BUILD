@@ -2873,6 +2873,7 @@ cc_test(
             "//src:ovms_lib",
             "//src:libovmsfilesystemfactory",
             "@cpp_httplib//:cpp_httplib", # server_test.cpp
+            ":client_test_utils",
             ":test_utils",
             "//src/rerank:rerank_api_handler",
             ":embeddings_handler_tests",
@@ -2917,6 +2918,7 @@ cc_test(
     deps = [
             "//src:ovms_lib",
             "@cpp_httplib//:cpp_httplib", # server_test.cpp
+            ":client_test_utils",
             ":test_utils",
             "@com_google_googletest//:gtest",
             "@com_google_googletest//:gtest_main",
@@ -3097,6 +3099,30 @@ test_suite(
         "//src:ovms_server_test_hp",
         "//src:ovms_legacy_test",
     ],
+)
+
+cc_library(
+    name = "client_test_utils",
+    linkstatic = 1,
+    hdrs = [
+        "test/client_test_utils.hpp",
+        ],
+    srcs = [
+        "test/client_test_utils.cpp",
+        ],
+    data = [
+    ],
+    linkopts = COMMON_STATIC_LIBS_LINKOPTS,
+    deps = [
+        "libovms_kfs_utils",
+        "libovmsmodelversion",
+        "libovmsprecision",
+        "libovms_version",
+        "libovms_kfs_grpc_inference_service_h",
+        "@com_github_grpc_grpc//:grpc++",
+        "@com_google_googletest//:gtest",
+    ],
+    copts = COPTS_TESTS,
 )
 
 filegroup(

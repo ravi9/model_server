@@ -36,6 +36,7 @@
 #include "../server.hpp"
 #include "../version.hpp"
 #include "c_api_test_utils.hpp"
+#include "client_test_utils.hpp"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -43,29 +44,29 @@ using grpc::ClientContext;
 const std::string portOldDefault{"9178"};
 const std::string typicalRestDefault{"9179"};
 
-// TODO: Move to utils?
-class ServingClient {
-    std::unique_ptr<inference::GRPCInferenceService::Stub> stub_;
+// // TODO: Move to utils?
+// class ServingClient {
+//     std::unique_ptr<inference::GRPCInferenceService::Stub> stub_;
 
-public:
-    ServingClient(std::shared_ptr<Channel> channel) :
-        stub_(inference::GRPCInferenceService::NewStub(channel)) {
-    }
+// public:
+//     ServingClient(std::shared_ptr<Channel> channel) :
+//         stub_(inference::GRPCInferenceService::NewStub(channel)) {
+//     }
 
-    // Pre-processing function for synthetic data.
-    // gRPC request proto is generated with synthetic data with shape/precision matching endpoint metadata.
-    void verifyLive(grpc::StatusCode expectedStatus = grpc::StatusCode::OK, bool alive = true) {
-        ClientContext context;
-        ::inference::ServerLiveRequest request;
-        ::inference::ServerLiveResponse response;
+//     // Pre-processing function for synthetic data.
+//     // gRPC request proto is generated with synthetic data with shape/precision matching endpoint metadata.
+//     void verifyLive(grpc::StatusCode expectedStatus = grpc::StatusCode::OK, bool alive = true) {
+//         ClientContext context;
+//         ::inference::ServerLiveRequest request;
+//         ::inference::ServerLiveResponse response;
 
-        ASSERT_NE(nullptr, stub_);
-        auto status = stub_->ServerLive(&context, request, &response);
-        // if we failed to connect it is ok return here
-        ASSERT_EQ(status.error_code(), expectedStatus);
-        EXPECT_EQ(response.live(), alive);
-    }
-};
+//         ASSERT_NE(nullptr, stub_);
+//         auto status = stub_->ServerLive(&context, request, &response);
+//         // if we failed to connect it is ok return here
+//         ASSERT_EQ(status.error_code(), expectedStatus);
+//         EXPECT_EQ(response.live(), alive);
+//     }
+// };
 
 // TODO: Move to utils?
 static void requestServerAlive(const char* grpcPort, grpc::StatusCode status = grpc::StatusCode::OK, bool expectedStatus = true) {
