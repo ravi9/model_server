@@ -2,6 +2,7 @@
 #include <grpcpp/server.h>
 #include <grpcpp/create_channel.h>
 #include <gtest/gtest.h>
+#include <httplib.h>
 
 #include <memory>
 
@@ -64,3 +65,9 @@ public:
         EXPECT_EQ(response.extensions().size(), 0);
     }
 };
+
+void requestServerAlive(const char* grpcPort, grpc::StatusCode status = grpc::StatusCode::OK, bool expectedStatus = true);
+void requestServerReady(const char* grpcPort, grpc::StatusCode status = grpc::StatusCode::OK, bool expectedStatus = true);
+void requestModelReady(const char* grpcPort, const std::string& modelName, grpc::StatusCode status = grpc::StatusCode::OK, bool expectedStatus = true);
+void checkServerMetadata(const char* grpcPort, grpc::StatusCode status = grpc::StatusCode::OK);
+void requestRestServerAlive(const char* httpPort, httplib::StatusCode status = httplib::StatusCode::OK_200, bool expectedStatus = true);

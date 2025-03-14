@@ -2872,7 +2872,6 @@ cc_test(
     deps = [
             "//src:ovms_lib",
             "//src:libovmsfilesystemfactory",
-            "@cpp_httplib//:cpp_httplib", # server_test.cpp
             ":client_test_utils",
             ":test_utils",
             "//src/rerank:rerank_api_handler",
@@ -3118,7 +3117,9 @@ cc_library(
         "libovmsmodelversion",
         "libovmsprecision",
         "libovms_version",
+        "libovmslogging",
         "libovms_kfs_grpc_inference_service_h",
+        "@cpp_httplib//:cpp_httplib",
         "@com_github_grpc_grpc//:grpc++",
         "@com_google_googletest//:gtest",
     ],
