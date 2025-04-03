@@ -148,7 +148,7 @@ Chat endpoint is expected to be used for scenarios where conversation context sh
 Completion endpoint should be used to pass the prompt directly by the client and for models without the jinja template.
 
 :::{dropdown} **Unary call with cURL**
-```console
+```bash
 curl http://localhost:8000/v3/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -192,7 +192,7 @@ curl http://localhost:8000/v3/chat/completions \
 ```
 
 A similar call can be made with a `completion` endpoint:
-```console
+```bash
 curl http://localhost:8000/v3/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -251,7 +251,7 @@ for chunk in stream:
 ```
 
 Output:
-```
+```console
 It looks like you're testing me!
 ```
 
@@ -278,7 +278,7 @@ for chunk in stream:
 ```
 
 Output:
-```
+```console
 It looks like you're testing me!
 ```
 :::
