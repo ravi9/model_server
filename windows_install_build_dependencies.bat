@@ -318,7 +318,7 @@ if !errorlevel! neq 0 exit /b !errorlevel!
 %python_path%\python.exe -m pip install "setuptools<60.0" "numpy==1.23" "Jinja2==3.1.6" "MarkupSafe==3.0.2"
 if !errorlevel! neq 0 exit /b !errorlevel!
 echo [INFO] Python %python_version% installed: %python_path%
-goto install_opencv
+goto install_curl
 :::::::::::::::::::::: Uninstall function
 :UninstallPython
 start "Unstalling_python" %opt_install_dir%\%python_full_name%.exe /quiet /uninstall /log python/uninstall.log
@@ -358,6 +358,50 @@ for /l %%i in (1,1,300) do (
 :python_install_finished
 exit /b 0
 :::::::::::::::::::::: Uninstall function end
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::: Install curl
+:install_curl
+echo [INFO] Installing curl ...
+
+set "curl_dir=curl-8.13.0_1-win64-mingw"
+set "curl_ver=curl-8.13.0_1-win64-mingw.zip"
+set "curl_http=https://curl.se/windows/dl-8.13.0_1/"
+
+set "curl_zip=%BAZEL_SHORT_PATH%\%curl_ver%"
+
+:: Download curl
+IF /I EXIST %curl_zip% (
+    if %expunge% EQU 1 (
+        del /S /Q %curl_zip%
+        if !errorlevel! neq 0 exit /b !errorlevel!
+        %wget_path% -P %BAZEL_SHORT_PATH%\ %curl_http%%curl_ver%
+        if !errorlevel! neq 0 exit /b !errorlevel!
+    ) else ( echo [INFO] file exists %curl_zip% )
+    
+) ELSE (
+    %wget_path% -P %BAZEL_SHORT_PATH%\ %curl_http%%curl_ver%
+    if !errorlevel! neq 0 exit /b !errorlevel!
+)
+:: Extract GenAi
+IF /I EXIST %BAZEL_SHORT_PATH%\%curl_dir% (
+     if %expunge% EQU 1 (
+        rmdir /S /Q %BAZEL_SHORT_PATH%\%curl_dir%
+        if !errorlevel! neq 0 exit /b !errorlevel!
+        C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %BAZEL_SHORT_PATH%
+        if !errorlevel! neq 0 exit /b !errorlevel!
+    ) else ( echo [INFO] directory exists %BAZEL_SHORT_PATH%\%curl_dir% )
+    
+) ELSE (
+    C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %BAZEL_SHORT_PATH%
+    if !errorlevel! neq 0 exit /b !errorlevel!
+)
+:: Create GenAi link - always to make sure it points to latest version
+IF /I EXIST %BAZEL_SHORT_PATH%\openvino (
+    rmdir /S /Q %BAZEL_SHORT_PATH%\openvino
+)
+mklink /d %BAZEL_SHORT_PATH%\openvino %BAZEL_SHORT_PATH%\%curl_dir%
+if !errorlevel! neq 0 exit /b !errorlevel!
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::::::::::::::::::::::: OpenCV
