@@ -133,10 +133,10 @@ TEST_F(OpenVINO, ResetOutputTensors) {
 }
 TEST_F(OpenVINO, RerankModel) {
     Core core;
-    auto model = core.read_model("/ovms/models/models/BAAI/bge-reranker-large/rerank/1/model.xml");
+    auto model = core.read_model("C:\\git\\model_server\\models\\BAAI\\bge-reranker-large\\rerank\\1\\model.xml");
     ov::AnyMap config = {ov::hint::performance_mode(ov::hint::PerformanceMode::THROUGHPUT),
         ov::auto_batch_timeout(0)};
-    auto compiledModel = core.compile_model(model, "CPU", config);
+    auto compiledModel = core.compile_model(model, "GPU", config);
     /*
 input_ids shape: 2x8,
 0,33600,31,2,2,81907,2,1,,0,33600,31,2,2,4889,19256,2,,
@@ -157,13 +157,13 @@ std::vector<int64_t> atMaskData{1,1,1,1,1,1,1,0/*,*/,1,1,1,1,1,1,1,1};
     inferRequest.infer();
     ov::Tensor output = inferRequest.get_tensor("logits");
     // set output
-		size_t i =0;
+        size_t i =0;
 		int elemCount = output.get_size();
     for (const auto& shape : output.get_shape()) {
         SPDLOG_ERROR("Sh[{}]={}", i, shape);
 ++i;
     }
-		for (int i = 0; i < elemCount; ++i) {
+    for (int i = 0; i < elemCount; ++i) {
 				float* val = reinterpret_cast<float*>(output.data()) + i;
          SPDLOG_ERROR("Sh[{}]={}", i, *val);
 }
