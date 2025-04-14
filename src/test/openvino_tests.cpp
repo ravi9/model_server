@@ -131,3 +131,52 @@ TEST_F(OpenVINO, ResetOutputTensors) {
         EXPECT_NEAR(in1[i] + 1, out[i], 0.0004) << "i:" << i;
     }
 }
+TEST_F(OpenVINO, RerankModel) {
+    Core core;
+    auto model = core.read_model("/ovms/models/models/BAAI/bge-reranker-large/rerank/1/model.xml");
+    ov::AnyMap config = {ov::hint::performance_mode(ov::hint::PerformanceMode::THROUGHPUT),
+        ov::auto_batch_timeout(0)};
+    auto compiledModel = core.compile_model(model, "CPU", config);
+    /*
+input_ids shape: 2x8,
+0,33600,31,2,2,81907,2,1,,0,33600,31,2,2,4889,19256,2,,
+attention_mask shape: 2x8,
+1,1,1,1,1,1,1,0,,1,1,1,1,1,1,1,1
+     */
+    size_t batch_size = 2;
+    size_t total_tokens_count_per_batch = 8;
+std::vector<int64_t> inpIdsData{0,33600,31,2,2,81907,2,1/*,*/,0,33600,31,2,2,4889,19256,2};
+std::vector<int64_t> atMaskData{1,1,1,1,1,1,1,0/*,*/,1,1,1,1,1,1,1,1};
+    auto input_ids = ov::Tensor(ov::element::i64, ov::Shape{batch_size, total_tokens_count_per_batch});
+    auto attention_mask = ov::Tensor(ov::element::i64, ov::Shape{batch_size, total_tokens_count_per_batch});
+	std::memcpy(input_ids.data(), inpIdsData.data(), batch_size * total_tokens_count_per_batch * sizeof(int64_t));
+	std::memcpy(attention_mask.data(), atMaskData.data(), batch_size * total_tokens_count_per_batch * sizeof(int64_t));
+    auto inferRequest = compiledModel.create_infer_request();
+    inferRequest.set_tensor("input_ids", input_ids);
+    inferRequest.set_tensor("attention_mask", attention_mask);
+    inferRequest.infer();
+    ov::Tensor output = inferRequest.get_tensor("logits");
+    // set output
+		size_t i =0;
+		int elemCount = output.get_size();
+    for (const auto& shape : output.get_shape()) {
+        SPDLOG_ERROR("Sh[{}]={}", i, shape);
+++i;
+    }
+		for (int i = 0; i < elemCount; ++i) {
+				float* val = reinterpret_cast<float*>(output.data()) + i;
+         SPDLOG_ERROR("Sh[{}]={}", i, *val);
+}
+    inferRequest.infer();
+    output = inferRequest.get_tensor("logits");
+		i =0;
+    for (const auto& shape : output.get_shape()) {
+        SPDLOG_ERROR("Sh[{}]={}", i, shape);
+++i;
+    }
+		for (int i = 0; i < elemCount; ++i) {
+				float* val = reinterpret_cast<float*>(output.data()) + i;
+         SPDLOG_ERROR("Sh[{}]={}", i, *val);
+}
+    
+}
