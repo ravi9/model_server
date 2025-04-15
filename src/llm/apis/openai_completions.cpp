@@ -225,11 +225,9 @@ absl::Status OpenAIChatCompletionsHandler::parseMessages() {
                                 if (status == CURLE_OK) {
                                     status = curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
                                 }
-                                // curl_easy_setopt(curl_handle, CURLOPT_PROXY, "http://proxy-dmz.intel.com:912");
                                 if (status == CURLE_OK) {
                                     status = curl_easy_setopt(curl_handle, CURLOPT_HTTPPROXYTUNNEL, 1L);
                                 }
-                                curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
                                 if (status == CURLE_OK) {
                                     status = curl_easy_perform(curl_handle);
                                 }

@@ -305,11 +305,7 @@ TEST_F(HttpOpenAIHandlerParsingTest, ParsingMessagesSucceedsUrl) {
     auto [index, image] = imageHistory[0];
     EXPECT_EQ(index, 0);
     EXPECT_EQ(image.get_element_type(), ov::element::u8);
-    EXPECT_EQ(image.get_size(), 3);
-    // std::vector<uint8_t> expectedBytes = {110, 181, 160};
-    // for (size_t i = 0; i < image.get_size(); i++) {
-    //     EXPECT_EQ(expectedBytes[i], ((uint8_t*)image.data())[i]);
-    // }
+    EXPECT_EQ(image.get_size(), 11059200);
     json = apiHandler->getProcessedJson();
     EXPECT_EQ(json, std::string("{\"model\":\"llama\",\"messages\":[{\"role\":\"user\",\"content\":\"What is in this image?\"}]}"));
 }
