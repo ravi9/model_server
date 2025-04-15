@@ -368,32 +368,32 @@ set "curl_dir=curl-8.13.0_1-win64-mingw"
 set "curl_ver=curl-8.13.0_1-win64-mingw.zip"
 set "curl_http=https://curl.se/windows/dl-8.13.0_1/"
 
-set "curl_zip=%BAZEL_SHORT_PATH%\%curl_ver%"
+set "curl_zip=%opt_install_dir%\%curl_ver%"
 
 :: Download curl
 IF /I EXIST %curl_zip% (
     if %expunge% EQU 1 (
         del /S /Q %curl_zip%
         if !errorlevel! neq 0 exit /b !errorlevel!
-        %wget_path% -P %BAZEL_SHORT_PATH%\ %curl_http%%curl_ver%
+        %wget_path% -P %opt_install_dir%\ %curl_http%%curl_ver%
         if !errorlevel! neq 0 exit /b !errorlevel!
     ) else ( echo [INFO] file exists %curl_zip% )
     
 ) ELSE (
-    %wget_path% -P %BAZEL_SHORT_PATH%\ %curl_http%%curl_ver%
+    %wget_path% -P %opt_install_dir%\ %curl_http%%curl_ver%
     if !errorlevel! neq 0 exit /b !errorlevel!
 )
 :: Extract curl
-IF /I EXIST %BAZEL_SHORT_PATH%\%curl_dir% (
+IF /I EXIST %opt_install_dir%\%curl_dir% (
      if %expunge% EQU 1 (
-        rmdir /S /Q %BAZEL_SHORT_PATH%\%curl_dir%
+        rmdir /S /Q %opt_install_dir%\%curl_dir%
         if !errorlevel! neq 0 exit /b !errorlevel!
-        C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %BAZEL_SHORT_PATH%
+        C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %opt_install_dir%
         if !errorlevel! neq 0 exit /b !errorlevel!
-    ) else ( echo [INFO] directory exists %BAZEL_SHORT_PATH%\%curl_dir% )
+    ) else ( echo [INFO] directory exists %opt_install_dir%\%curl_dir% )
     
 ) ELSE (
-    C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %BAZEL_SHORT_PATH%
+    C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %opt_install_dir%
     if !errorlevel! neq 0 exit /b !errorlevel!
 )
 
