@@ -383,7 +383,7 @@ IF /I EXIST %curl_zip% (
     %wget_path% -P %BAZEL_SHORT_PATH%\ %curl_http%%curl_ver%
     if !errorlevel! neq 0 exit /b !errorlevel!
 )
-:: Extract GenAi
+:: Extract curl
 IF /I EXIST %BAZEL_SHORT_PATH%\%curl_dir% (
      if %expunge% EQU 1 (
         rmdir /S /Q %BAZEL_SHORT_PATH%\%curl_dir%
@@ -396,12 +396,6 @@ IF /I EXIST %BAZEL_SHORT_PATH%\%curl_dir% (
     C:\Windows\System32\tar.exe -xf "%curl_zip%" -C %BAZEL_SHORT_PATH%
     if !errorlevel! neq 0 exit /b !errorlevel!
 )
-:: Create GenAi link - always to make sure it points to latest version
-IF /I EXIST %BAZEL_SHORT_PATH%\openvino (
-    rmdir /S /Q %BAZEL_SHORT_PATH%\openvino
-)
-mklink /d %BAZEL_SHORT_PATH%\openvino %BAZEL_SHORT_PATH%\%curl_dir%
-if !errorlevel! neq 0 exit /b !errorlevel!
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::::::::::::::::::::::: OpenCV
